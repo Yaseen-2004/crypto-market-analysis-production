@@ -1,0 +1,22 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Cached API responses (regenerated on every run)
+data/raw/cache/
+
+# Local SQLite store: a growing binary, rebuilt by running the pipeline
+data/*.db
+
+# Bulky regenerable outputs. Everything here is rebuilt in ~30 seconds by
+# `python main.py --cache-minutes 60`; the summary CSVs, figures and the written
+# report ARE tracked, so the results stay visible without bloating every clone.
+data/raw/crypto_data.csv
+data/processed/crypto_data_cleaned.csv
+data/processed/crypto_analysis_dataset.csv
+reports/interactive_charts.html

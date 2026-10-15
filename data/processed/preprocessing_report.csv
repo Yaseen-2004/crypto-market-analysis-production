@@ -1,0 +1,15 @@
+metric,value
+input_rows,12064
+coins_input,100
+invalid_rows_dropped,0
+invalid_prices_set_missing,0
+duplicates_removed,0
+rows_outside_window,0
+prices_interpolated,0
+rows_missing_price_dropped,0
+coins_excluded,none
+output_rows,12064
+coins_output,100
+median_interval_minutes,60.0
+window_start_utc,2026-09-11 07:00 UTC
+window_end_utc,2026-09-16 09:53 UTC

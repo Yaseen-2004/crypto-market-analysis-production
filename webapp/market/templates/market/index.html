@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Market Refresh Server</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    color-scheme: dark;
+    --ground: #0b0f16; --panel: #121822; --panel-2: #172030; --line: #1f2a3a;
+    --ink: #e9eff7; --ink-2: #9dabbf; --ink-3: #6c7b91;
+    --accent: #4a90e8; --gain: #2ec26a; --loss: #e5625f; --warn: #d9a441;
+    --accent-soft: rgba(74,144,232,.16); --gain-soft: rgba(46,194,106,.14); --loss-soft: rgba(229,98,95,.14);
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      color-scheme: light;
+      --ground: #eef1f5; --panel: #ffffff; --panel-2: #f6f8fb; --line: #dde3ec;
+      --ink: #0d1520; --ink-2: #4d5a6c; --ink-3: #7d8ba0;
+      --accent: #2a78d6; --gain: #0a9d4a; --loss: #d03b3b; --warn: #b7791f;
+      --accent-soft: rgba(42,120,214,.12); --gain-soft: rgba(10,157,74,.12); --loss-soft: rgba(208,59,59,.12);
+    }
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --ground: #eef1f5; --panel: #ffffff; --panel-2: #f6f8fb; --line: #dde3ec;
+    --ink: #0d1520; --ink-2: #4d5a6c; --ink-3: #7d8ba0;
+    --accent: #2a78d6; --gain: #0a9d4a; --loss: #d03b3b; --warn: #b7791f;
+    --accent-soft: rgba(42,120,214,.12); --gain-soft: rgba(10,157,74,.12); --loss-soft: rgba(208,59,59,.12);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--ground); color: var(--ink);
+    font: 15px/1.5 "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding-inline: 16px; padding-block: 32px 96px;
+  }
+  main { max-width: 1080px; margin: 0 auto; display: grid; gap: 28px; }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; }
+  .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); margin: 0 0 6px; }
+  h1 { font-size: clamp(26px, 4vw, 36px); line-height: 1.1; letter-spacing: -.02em; margin: 0; text-wrap: balance; }
+  h2 { font-size: 12px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 12px; }
+  .lede { color: var(--ink-2); max-width: 64ch; margin: 10px 0 0; }
+
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1px;
+           background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .stat { background: var(--panel); padding: 14px 18px; }
+  .stat .k { font-size: 10.5px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+  .stat .v { font-size: 22px; font-weight: 600; margin-top: 4px; letter-spacing: -.01em; }
+  .stat .m { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+  .card { display: grid; gap: 4px; padding: 18px 20px; background: var(--panel); border: 1px solid var(--line);
+          border-radius: 12px; color: inherit; text-decoration: none; transition: border-color .15s, transform .15s; }
+  .card:hover, .card:focus-visible { border-color: var(--accent); transform: translateY(-2px); outline: none; }
+  .card strong { font-size: 18px; }
+  .card span { color: var(--ink-3); font-size: 13px; }
+  .card em { font-style: normal; color: var(--accent); font-size: 13px; font-weight: 600; margin-top: 6px; }
+
+  .explain { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+  .explain ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; color: var(--ink-2); font-size: 14px; }
+  .explain b { color: var(--ink); font-weight: 600; }
+
+  .table-wrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th { font-size: 10.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); background: var(--panel-2); }
+  tbody tr:last-child td { border-bottom: 0; }
+  td.num, th.num { text-align: right; }
+  td.err { white-space: normal; color: var(--loss); max-width: 340px; font-size: 12px; }
+  .chip { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 11.5px; font-weight: 600; }
+  .chip.success { background: var(--gain-soft); color: var(--gain); }
+  .chip.failed { background: var(--loss-soft); color: var(--loss); }
+  .chip.running { background: var(--accent-soft); color: var(--accent); }
+  .empty { padding: 20px; color: var(--ink-3); }
+
+  .api { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; font-size: 13px; margin: 0; }
+  .api dt { font-family: "IBM Plex Mono", monospace; color: var(--ink); }
+  .api dd { margin: 0; color: var(--ink-3); }
+  a { color: var(--accent); }
+  @media (max-width: 520px) { .api { grid-template-columns: 1fr; } .api dd { margin-bottom: 8px; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="eyebrow">Django · APScheduler · CoinGecko</p>
+    <h1>Market Refresh Server</h1>
+    <p class="lede">The top {{ status.lastSuccess.coins|default:"100" }} cryptocurrencies, re-analysed every
+      {{ interval }} minute{{ interval|pluralize }}. Open either interface — both pick up each new refresh on their own.</p>
+  </header>
+
+  <section class="stats" aria-label="Refresh status">
+    <div class="stat">
+      <div class="k">Last refresh</div>
+      <div class="v">{% if status.running %}In progress{% elif status.lastSuccess %}<span class="mono">{{ status.lastSuccess.finishedAt|slice:"11:16" }}</span> UTC{% else %}Not yet{% endif %}</div>
+      <div class="m">{% if status.lastSuccess %}run #{{ status.lastSuccess.id }}{% else %}the first refresh starts shortly{% endif %}</div>
+    </div>
+    <div class="stat">
+      <div class="k">Schedule</div>
+      <div class="v">Every {{ interval }} min</div>
+      <div class="m">{% if status.scheduler.alive %}scheduler running{% else %}scheduler offline{% endif %}</div>
+    </div>
+    <div class="stat">
+      <div class="k">Coverage</div>
+      <div class="v mono">{{ status.lastSuccess.coins|default:"—" }} coins</div>
+      <div class="m">{{ status.lastSuccess.outliers|default:"—" }} outliers flagged</div>
+    </div>
+    <div class="stat">
+      <div class="k">Data window ends</div>
+      <div class="v mono">{% if status.lastSuccess.windowEnd %}{{ status.lastSuccess.windowEnd|slice:"11:16" }}{% else %}—{% endif %}</div>
+      <div class="m">UTC · hourly bars</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Interfaces</h2>
+    <div class="cards">
+      {% for key, title, blurb in interfaces %}
+        <a class="card" href="{% url 'market:'|add:key %}">
+          <strong>{{ title }}</strong>
+          <span>{{ blurb }}</span>
+          <em>Open →</em>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="explain">
+    <h2>How each refresh works</h2>
+    <ol>
+      <li><b>Every {{ interval }} minute{{ interval|pluralize }}</b> the scheduler fetches the live market snapshot — prices, caps and
+        volumes for all coins in a single API call.</li>
+      <li><b>Price histories</b> are hourly, so they only gain a bar once an hour; downloads younger than
+        {{ history_cache }} minutes are reused. The full 100-coin history download happens roughly hourly.</li>
+      <li>The analysis reruns, a new snapshot is stored, and open pages <b>reload onto it automatically</b>,
+        keeping the coin and filters you had selected.</li>
+      <li>If a refresh overruns its slot, the next tick is skipped rather than stacked.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Recent refreshes</h2>
+    <div class="table-wrap">
+      {% if runs %}
+      <table>
+        <thead>
+          <tr><th>Run</th><th>Started (UTC)</th><th>Trigger</th><th>Status</th><th class="num">Duration</th>
+              <th class="num">Coins</th><th class="num">Outliers</th><th class="num">Histories downloaded</th><th>Note</th></tr>
+        </thead>
+        <tbody>
+        {% for run in runs %}
+          <tr>
+            <td class="mono">#{{ run.pk }}</td>
+            <td class="mono">{{ run.started_at|date:"Y-m-d H:i:s" }}</td>
+            <td>{{ run.get_trigger_display }}</td>
+            <td><span class="chip {{ run.status }}">{{ run.get_status_display }}</span></td>
+            <td class="num mono">{% if run.duration_seconds is not None %}{{ run.duration_seconds|floatformat:0 }}s{% else %}—{% endif %}</td>
+            <td class="num mono">{{ run.coins|default_if_none:"—" }}</td>
+            <td class="num mono">{{ run.outliers|default_if_none:"—" }}</td>
+            <td class="num mono">{{ run.charts_downloaded|default_if_none:"—" }}</td>
+            <td class="err">{{ run.error|truncatechars:160 }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        <p class="empty">No refreshes yet — the first one starts a few seconds after the server launches.</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <section>
+    <h2>API</h2>
+    <dl class="api">
+      <dt>GET {% url 'market:status' %}</dt><dd>Refresh state, last success and next scheduled run.</dd>
+      <dt>GET {% url 'market:data_json' %}</dt><dd>The latest analysis payload as JSON.</dd>
+      <dt>GET {% url 'market:data_js' %}</dt><dd>The same payload as a script for the interfaces.</dd>
+      <dt>POST {% url 'market:refresh' %}</dt><dd>Start a refresh now (CSRF-protected, 60-second cooldown).</dd>
+      <dt>/admin/</dt><dd>Run history and snapshots (<code>python manage.py createsuperuser</code> first).</dd>
+    </dl>
+  </section>
+
+  <p style="font-size:12px;color:var(--ink-3);margin:0">Descriptive statistics of historical market data —
+    not financial advice.</p>
+</main>
+{{ live_tags|safe }}
+</body>
+</html>

@@ -1,0 +1,1088 @@
+<title>Risk Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  /* Dark-first: this is a desk display. The light palette is the deliberate
+     day-shift variant, defined from the same token set. */
+  :root {
+    color-scheme: dark;
+    --ground: #0b0f16;
+    --panel: #121822;
+    --panel-2: #172030;
+    --raised: #1c2637;
+    --line: #1f2a3a;
+    --line-2: #172130;
+    --ink: #e9eff7;
+    --ink-2: #9dabbf;
+    --ink-3: #6c7b91;
+    --accent: #4a90e8;
+    --accent-soft: rgba(74, 144, 232, 0.16);
+    --gain: #2ec26a;
+    --gain-soft: rgba(46, 194, 106, 0.14);
+    --loss: #e5625f;
+    --loss-soft: rgba(229, 98, 95, 0.14);
+    --warn: #d9a441;
+    --warn-soft: rgba(217, 164, 65, 0.14);
+    --s1: #4a90e8;
+    --s2: #e07a48;
+    --s3: #27b98a;
+    --band: rgba(157, 171, 191, 0.13);
+    --grid: #1c2635;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      color-scheme: light;
+      --ground: #eef1f5;
+      --panel: #ffffff;
+      --panel-2: #f6f8fb;
+      --raised: #eef2f7;
+      --line: #dde3ec;
+      --line-2: #e8edf3;
+      --ink: #0d1520;
+      --ink-2: #4d5a6c;
+      --ink-3: #7d8ba0;
+      --accent: #2a78d6;
+      --accent-soft: rgba(42, 120, 214, 0.12);
+      --gain: #0a9d4a;
+      --gain-soft: rgba(10, 157, 74, 0.12);
+      --loss: #d03b3b;
+      --loss-soft: rgba(208, 59, 59, 0.12);
+      --warn: #b7791f;
+      --warn-soft: rgba(183, 121, 31, 0.13);
+      --s1: #2a78d6;
+      --s2: #eb6834;
+      --s3: #1baf7a;
+      --band: rgba(125, 139, 160, 0.16);
+      --grid: #e4e9f0;
+    }
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --ground: #eef1f5;
+    --panel: #ffffff;
+    --panel-2: #f6f8fb;
+    --raised: #eef2f7;
+    --line: #dde3ec;
+    --line-2: #e8edf3;
+    --ink: #0d1520;
+    --ink-2: #4d5a6c;
+    --ink-3: #7d8ba0;
+    --accent: #2a78d6;
+    --accent-soft: rgba(42, 120, 214, 0.12);
+    --gain: #0a9d4a;
+    --gain-soft: rgba(10, 157, 74, 0.12);
+    --loss: #d03b3b;
+    --loss-soft: rgba(208, 59, 59, 0.12);
+    --warn: #b7791f;
+    --warn-soft: rgba(183, 121, 31, 0.13);
+    --s1: #2a78d6;
+    --s2: #eb6834;
+    --s3: #1baf7a;
+    --band: rgba(125, 139, 160, 0.16);
+    --grid: #e4e9f0;
+  }
+
+  /* Depth tokens: elevation is used to separate layers - the room recedes,
+     panels sit above it, the focused panel sits highest. */
+  :root {
+    --lift-1: 0 1px 0 rgba(255,255,255,0.04) inset, 0 2px 4px rgba(0,0,0,0.35), 0 8px 20px rgba(0,0,0,0.30);
+    --lift-2: 0 1px 0 rgba(255,255,255,0.06) inset, 0 6px 14px rgba(0,0,0,0.42), 0 20px 44px rgba(0,0,0,0.38);
+    --bevel-top: rgba(255, 255, 255, 0.07);
+    --bevel-bottom: rgba(0, 0, 0, 0.45);
+    --room: radial-gradient(130% 100% at 50% -10%, #141c29 0%, #0b0f16 55%, #070a10 100%);
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --lift-1: 0 1px 0 rgba(255,255,255,0.9) inset, 0 1px 2px rgba(15,25,40,0.08), 0 6px 16px rgba(15,25,40,0.08);
+      --lift-2: 0 1px 0 rgba(255,255,255,1) inset, 0 4px 10px rgba(15,25,40,0.10), 0 18px 38px rgba(15,25,40,0.12);
+      --bevel-top: rgba(255, 255, 255, 0.95);
+      --bevel-bottom: rgba(15, 25, 40, 0.10);
+      --room: radial-gradient(130% 100% at 50% -10%, #ffffff 0%, #eef1f5 55%, #e3e8ef 100%);
+    }
+  }
+  :root[data-theme="light"] {
+    --lift-1: 0 1px 0 rgba(255,255,255,0.9) inset, 0 1px 2px rgba(15,25,40,0.08), 0 6px 16px rgba(15,25,40,0.08);
+    --lift-2: 0 1px 0 rgba(255,255,255,1) inset, 0 4px 10px rgba(15,25,40,0.10), 0 18px 38px rgba(15,25,40,0.12);
+    --bevel-top: rgba(255, 255, 255, 0.95);
+    --bevel-bottom: rgba(15, 25, 40, 0.10);
+    --room: radial-gradient(130% 100% at 50% -10%, #ffffff 0%, #eef1f5 55%, #e3e8ef 100%);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--room);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; }
+  button { font: inherit; color: inherit; }
+
+  .shell { min-height: 100%; display: flex; flex-direction: column; }
+
+  /* ---------------- masthead ---------------- */
+  .masthead {
+    display: flex; align-items: center; gap: 22px; flex-wrap: wrap;
+    padding: 14px clamp(16px, 2vw, 28px);
+    border-bottom: 1px solid var(--line); background: var(--panel);
+  }
+  .brand { display: flex; align-items: baseline; gap: 12px; margin-right: auto; }
+  .brand h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.015em; margin: 0; }
+  .brand .tag {
+    font-size: 10.5px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .meta-inline { display: flex; gap: 20px; flex-wrap: wrap; font-size: 12px; color: var(--ink-3); }
+  .meta-inline b { color: var(--ink-2); font-weight: 600; }
+  .ghost {
+    border: 1px solid var(--line); background: var(--panel-2); color: var(--ink-2);
+    border-radius: 8px; padding: 7px 12px; font-size: 12.5px; font-weight: 600; cursor: pointer;
+  }
+  .ghost:hover, .ghost:focus-visible { border-color: var(--accent); color: var(--ink); outline: none; }
+
+  /* ---------------- KPI strip ---------------- */
+  .kpis {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1px; background: var(--line); border-bottom: 1px solid var(--line);
+  }
+  .kpi {
+    background: linear-gradient(var(--panel-2), var(--panel) 60%);
+    border-top: 1px solid var(--bevel-top);
+    padding: 12px clamp(14px, 1.6vw, 22px);
+  }
+  .kpi .k {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3);
+  }
+  .kpi .v { font-size: clamp(22px, 2vw, 30px); font-weight: 600; letter-spacing: -0.02em; margin-top: 4px; line-height: 1; }
+  .kpi .m { font-size: 11.5px; color: var(--ink-3); margin-top: 5px; }
+
+  /* ---------------- ticker ---------------- */
+  .ticker {
+    overflow: hidden; border-bottom: 1px solid var(--line); background: var(--panel-2);
+    padding: 7px 0; position: relative;
+  }
+  .ticker-track { display: flex; gap: 34px; width: max-content; animation: slide 64s linear infinite; }
+  .ticker:hover .ticker-track { animation-play-state: paused; }
+  @keyframes slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .tick-item { display: flex; align-items: baseline; gap: 8px; font-size: 12.5px; white-space: nowrap; }
+  .tick-item .sym { font-weight: 600; letter-spacing: 0.04em; }
+  .tick-item .px { color: var(--ink-2); }
+  .up { color: var(--gain); }
+  .down { color: var(--loss); }
+
+  /* ---------------- board ---------------- */
+  .board {
+    flex: 1; display: grid; gap: 1px; background: var(--line);
+    grid-template-columns: minmax(260px, 310px) minmax(0, 1fr) minmax(300px, 380px);
+    align-items: stretch;
+  }
+  .col { background: transparent; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+  .panel {
+    background: linear-gradient(var(--panel-2), var(--panel) 42%);
+    border: 1px solid var(--line);
+    border-top-color: var(--bevel-top);
+    border-bottom-color: var(--bevel-bottom);
+    border-radius: 12px;
+    box-shadow: var(--lift-1);
+    display: flex; flex-direction: column; min-height: 0; overflow: hidden;
+    transition: box-shadow .22s ease, transform .22s ease;
+  }
+  .col-mid .panel { box-shadow: var(--lift-2); }
+  .panel:hover { box-shadow: var(--lift-2); }
+  .panel + .panel { margin-top: 12px; }
+  .panel-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 11px 14px; border-bottom: 1px solid var(--line-2); flex: none;
+  }
+  .panel-head h2 {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase;
+    color: var(--ink-2); margin: 0;
+  }
+  .panel-head .aside { font-size: 11px; color: var(--ink-3); }
+  .pad { padding: 12px clamp(12px, 1.4vw, 18px); }
+  .colpad { padding: 12px; display: flex; flex-direction: column; min-height: 0; flex: 1; }
+  .scroll { overflow-y: auto; min-height: 0; flex: 1; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  .scroll::-webkit-scrollbar { width: 8px; }
+  .scroll::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+
+  /* ---------------- instrument list ---------------- */
+  .toolbar { padding: 10px 12px; border-bottom: 1px solid var(--line-2); display: grid; gap: 8px; flex: none; }
+  .field {
+    display: flex; align-items: center; gap: 8px; background: var(--raised);
+    border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px;
+  }
+  .field input { border: 0; background: none; outline: none; width: 100%; font: inherit; font-size: 13px; color: var(--ink); }
+  .field input::placeholder { color: var(--ink-3); }
+  .field svg { flex: none; color: var(--ink-3); }
+  .sorts { display: flex; gap: 5px; flex-wrap: wrap; }
+  .sorts button {
+    border: 1px solid var(--line); background: var(--panel-2); color: var(--ink-3);
+    border-radius: 7px; padding: 4px 9px; font-size: 11px; font-weight: 600; cursor: pointer;
+  }
+  .sorts button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .switchline { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: var(--ink-3); }
+  .switchline input { accent-color: var(--accent); width: 14px; height: 14px; }
+
+  .inst {
+    display: grid; grid-template-columns: 26px 1fr 54px 66px; align-items: center; gap: 9px;
+    width: 100%; text-align: left; padding: 8px 12px; border: 0; background: none; cursor: pointer;
+    border-bottom: 1px solid var(--line-2);
+  }
+  .inst:hover { background: var(--panel-2); }
+  .inst:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .inst[aria-current="true"] { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); }
+  .inst .r { font-size: 11px; color: var(--ink-3); text-align: right; }
+  .inst .sym { display: block; font-size: 13px; font-weight: 600; letter-spacing: 0.02em; }
+  .inst .nm { display: block; font-size: 11px; color: var(--ink-3); margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .inst .px { font-size: 12px; text-align: right; color: var(--ink-2); }
+  .inst .ch { font-size: 12px; font-weight: 600; text-align: right; }
+  .spark { display: block; width: 54px; height: 22px; }
+
+  /* ---------------- focus panel ---------------- */
+  .focus-head {
+    display: flex; align-items: flex-end; gap: clamp(14px, 2vw, 32px); flex-wrap: wrap;
+    padding: 14px clamp(14px, 1.6vw, 20px); border-bottom: 1px solid var(--line-2);
+  }
+  .focus-id .sym-row { display: flex; align-items: center; gap: 10px; }
+  .focus-id .sym {
+    font-size: clamp(22px, 2.2vw, 30px); font-weight: 700; letter-spacing: -0.01em; line-height: 1;
+  }
+  .chip {
+    display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; border-radius: 6px;
+    font-size: 11px; font-weight: 600; background: var(--raised); color: var(--ink-2);
+  }
+  .chip.bull { background: var(--gain-soft); color: var(--gain); }
+  .chip.bear { background: var(--loss-soft); color: var(--loss); }
+  .chip.warn { background: var(--warn-soft); color: var(--warn); }
+  .focus-id .nm { font-size: 12.5px; color: var(--ink-3); margin-top: 6px; }
+  .focus-price { margin-left: auto; text-align: right; }
+  .focus-price .big { font-size: clamp(30px, 3.4vw, 46px); font-weight: 600; letter-spacing: -0.03em; line-height: 1; }
+  .focus-price .sub { font-size: 13px; margin-top: 6px; font-weight: 600; }
+  .focus-price .bar-note { font-size: 11px; color: var(--ink-3); margin-top: 3px; }
+
+  .charts { display: flex; flex-direction: column; gap: 12px; padding: 12px clamp(12px, 1.4vw, 18px) 14px; }
+  .chartbox { background: var(--panel-2); border: 1px solid var(--line-2); border-radius: 9px; padding: 10px 12px 6px; }
+  .chartbox .hd { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+  .chartbox .t { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); }
+  .chartbox .readout { font-size: 11.5px; color: var(--ink-3); }
+  .chartbox .readout b { color: var(--ink); font-weight: 600; }
+  svg.chart { display: block; width: 100%; height: auto; cursor: crosshair; touch-action: pan-y; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11px; color: var(--ink-3); margin-top: 6px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .sw { width: 13px; height: 3px; border-radius: 2px; display: inline-block; }
+  .sw.dot { width: 9px; height: 9px; border-radius: 50%; }
+
+  .grid-line { stroke: var(--grid); stroke-width: 1; }
+  .axis-text { fill: var(--ink-3); font-size: 10px; font-family: "IBM Plex Mono", monospace; }
+  .line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .l1 { stroke: var(--s1); } .l2 { stroke: var(--s2); } .l3 { stroke: var(--s3); }
+  .area { fill: var(--accent-soft); stroke: none; }
+  .bandfill { fill: var(--band); }
+  .meanline { stroke: var(--ink-3); stroke-width: 1; }
+  .retline { stroke: var(--ink-2); stroke-width: 1.4; fill: none; }
+  .cursor { stroke: var(--ink-3); stroke-width: 1; }
+  .mk-up { fill: var(--gain); stroke: var(--panel-2); stroke-width: 1.2; }
+  .mk-dn { fill: var(--loss); stroke: var(--panel-2); stroke-width: 1.2; }
+  .dot { fill: var(--accent); stroke: var(--panel); stroke-width: 1.4; cursor: pointer; }
+  .dot.mut { fill: var(--ink-3); }
+  .qline { stroke: var(--line); stroke-width: 1; }
+
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 1px; background: var(--line-2); }
+  .metric { background: var(--panel); padding: 10px 14px; }
+  .metric .k { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+  .metric .v { font-size: 17px; font-weight: 600; margin-top: 4px; letter-spacing: -0.01em; }
+  .metric .m { font-size: 10.5px; color: var(--ink-3); margin-top: 3px; }
+
+  /* ---------------- right column ---------------- */
+  .lead {
+    display: grid; grid-template-columns: 20px 1fr 52px; gap: 9px; align-items: center;
+    width: 100%; text-align: left; padding: 7px 12px; border: 0; background: none; cursor: pointer;
+  }
+  .lead:hover { background: var(--panel-2); }
+  .lead:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .lead .n { font-size: 10.5px; color: var(--ink-3); text-align: right; }
+  .lead .lbl { font-size: 12px; font-weight: 500; margin-bottom: 4px; display: flex; gap: 6px; align-items: baseline; }
+  .lead .lbl small { color: var(--ink-3); font-size: 10.5px; }
+  /* display:block matters — a bare inline span ignores height and draws nothing.
+     The bars are extruded: a lit top edge, a shaded base, and a cast shadow. */
+  .track {
+    display: block; height: 10px; border-radius: 3px; overflow: hidden;
+    background: linear-gradient(var(--bevel-bottom), transparent 60%), var(--raised);
+    box-shadow: inset 0 1px 2px var(--bevel-bottom);
+  }
+  .fill {
+    display: block; height: 100%; border-radius: 3px;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--ink-3) 76%, white) 0%, var(--ink-3) 46%, color-mix(in srgb, var(--ink-3) 76%, black) 100%);
+    box-shadow: 0 1px 2px rgba(0,0,0,.3);
+  }
+  .fill.hot {
+    background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 72%, white) 0%, var(--accent) 46%, color-mix(in srgb, var(--accent) 74%, black) 100%);
+  }
+  .fill.hot { background: var(--accent); }
+  .lead .v { font-size: 11.5px; text-align: right; color: var(--ink-2); }
+
+  .feed { display: grid; grid-template-columns: 22px 1fr auto; gap: 9px; align-items: center;
+    width: 100%; text-align: left; padding: 8px 12px; border: 0; background: none; cursor: pointer;
+    border-bottom: 1px solid var(--line-2); }
+  .feed:hover { background: var(--panel-2); }
+  .feed:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .arrow { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; font-size: 10px; font-weight: 700; }
+  .arrow.pos { background: var(--gain-soft); color: var(--gain); }
+  .arrow.neg { background: var(--loss-soft); color: var(--loss); }
+  /* display:block again — these stack, they are not inline runs */
+  .feed .who { display: block; font-size: 12px; font-weight: 600; }
+  .feed .when { display: block; font-size: 10.5px; color: var(--ink-3); margin-top: 1px; }
+  .feed .num { display: block; font-size: 12.5px; font-weight: 600; text-align: right; }
+  .feed .z { display: block; font-size: 10px; color: var(--ink-3); text-align: right; margin-top: 1px; }
+
+  /* ---------------- outlier balance + 3D scatter ---------------- */
+  .balance { padding: 10px 12px; border-bottom: 1px solid var(--line-2); }
+  .balance .bar {
+    display: flex; height: 12px; border-radius: 4px; overflow: hidden;
+    box-shadow: inset 0 1px 3px var(--bevel-bottom);
+  }
+  .balance .bar i { display: block; height: 100%; }
+  .balance .bar .p { background: linear-gradient(180deg, color-mix(in srgb, var(--gain) 74%, white), var(--gain) 55%, color-mix(in srgb, var(--gain) 76%, black)); }
+  .balance .bar .n { background: linear-gradient(180deg, color-mix(in srgb, var(--loss) 74%, white), var(--loss) 55%, color-mix(in srgb, var(--loss) 76%, black)); }
+  .balance .keys { display: flex; justify-content: space-between; margin-top: 6px; font-size: 11px; }
+  .balance .keys b { font-weight: 600; }
+  .dirs { display: flex; gap: 4px; }
+  .dirs button {
+    border: 1px solid var(--line); background: var(--panel-2); color: var(--ink-3);
+    border-radius: 6px; padding: 3px 8px; font-size: 10.5px; font-weight: 600; cursor: pointer;
+  }
+  .dirs button[aria-pressed="true"] { color: var(--ink); border-color: var(--accent); background: var(--accent-soft); }
+  .dirs button[data-dir="pos"][aria-pressed="true"] { color: var(--gain); border-color: var(--gain); background: var(--gain-soft); }
+  .dirs button[data-dir="neg"][aria-pressed="true"] { color: var(--loss); border-color: var(--loss); background: var(--loss-soft); }
+
+  .scene { position: relative; }
+  .scene svg { cursor: grab; touch-action: none; }
+  .scene svg:active { cursor: grabbing; }
+  .cube-edge { stroke: var(--line); stroke-width: 1; fill: none; }
+  .cube-edge.back { stroke: var(--line-2); }
+  .cube-face { fill: var(--raised); opacity: .35; }
+  .node { stroke: var(--panel); stroke-width: 1; cursor: pointer; }
+  .node-label { fill: var(--ink-3); font-size: 9px; font-family: "IBM Plex Mono", monospace; }
+  .axis-tip { fill: var(--ink-2); font-size: 9.5px; font-weight: 600; font-family: "IBM Plex Sans", sans-serif; }
+  .hint { font-size: 10.5px; color: var(--ink-3); margin-top: 6px; display: flex; justify-content: space-between; gap: 8px; }
+
+  .seg { display: flex; gap: 3px; background: var(--raised); border-radius: 7px; padding: 3px; }
+  .seg button {
+    border: 0; background: none; color: var(--ink-3); font-size: 11px; font-weight: 600;
+    padding: 4px 9px; border-radius: 5px; cursor: pointer;
+  }
+  .seg button[aria-selected="true"] { background: var(--panel); color: var(--ink); }
+
+  .footnote {
+    padding: 10px clamp(14px, 1.6vw, 22px); border-top: 1px solid var(--line);
+    background: var(--panel); font-size: 11px; color: var(--ink-3); line-height: 1.55;
+  }
+  .footnote b { color: var(--ink-2); font-weight: 600; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker-track { animation: none; }
+    * { transition-duration: .01ms !important; }
+  }
+
+  /* Desk width: the board fills the screen and each column scrolls on its own,
+     so the whole board stays readable without scrolling the page. */
+  @media (min-width: 1281px) {
+    html, body { overflow: hidden; }
+    .shell { height: 100%; }
+    .board, .col, .colpad { min-height: 0; }
+    .col-mid .panel { overflow-y: auto; }
+  }
+
+  /* two columns: the feed column drops under the focus panel */
+  @media (max-width: 1280px) {
+    .board { grid-template-columns: minmax(230px, 280px) minmax(0, 1fr); }
+    .col-right { grid-column: 1 / -1; }
+    .col-right .colpad { flex-direction: row; gap: 12px; flex-wrap: wrap; }
+    .col-right .panel { flex: 1 1 320px; margin-top: 0; }
+    .col-left .scroll { max-height: 60vh; }
+  }
+  /* single column */
+  @media (max-width: 860px) {
+    .board { grid-template-columns: minmax(0, 1fr); }
+    .col-left, .col-right { grid-column: auto; }
+    .col-left .scroll { max-height: 46vh; }
+    .focus-price { margin-left: 0; text-align: left; width: 100%; }
+    .meta-inline { gap: 12px; font-size: 11px; }
+  }
+  @media (max-width: 420px) {
+    body { font-size: 14px; }
+    .inst { grid-template-columns: 22px 1fr 60px; }
+    .inst .spark { display: none; }
+  }
+</style>
+
+<div class="shell">
+  <header class="masthead">
+    <div class="brand">
+      <h1>Risk Room</h1>
+      <span class="tag">Top 100 · 5-day window</span>
+    </div>
+    <div class="meta-inline">
+      <span>Source <b>CoinGecko API</b></span>
+      <span>Window <b id="m-window">—</b></span>
+      <span>Resolution <b id="m-res">—</b></span>
+      <span>Observations <b id="m-obs">—</b></span>
+      <span>Desk time <b class="mono" id="m-clock">—</b></span>
+    </div>
+    <button class="ghost" id="btn-theme" aria-label="Switch between dark and light">Day view</button>
+  </header>
+
+  <section class="kpis" aria-label="Market summary">
+    <div class="kpi"><div class="k">Advancers</div><div class="v mono" id="k-adv">—</div><div class="m" id="k-adv-m">—</div></div>
+    <div class="kpi"><div class="k">Median 5-day</div><div class="v mono" id="k-med">—</div><div class="m">across the top 100</div></div>
+    <div class="kpi"><div class="k">Most volatile</div><div class="v" id="k-vol">—</div><div class="m" id="k-vol-m">—</div></div>
+    <div class="kpi"><div class="k">Outliers</div><div class="v mono" id="k-out">—</div><div class="m" id="k-out-m">—</div></div>
+    <div class="kpi"><div class="k">Near-constant</div><div class="v mono" id="k-flat">—</div><div class="m">stablecoins &amp; tokenized funds</div></div>
+  </section>
+
+  <div class="ticker" aria-hidden="true"><div class="ticker-track" id="ticker"></div></div>
+
+  <div class="board">
+    <!-- ---------- left: instruments ---------- -->
+    <div class="col col-left">
+      <div class="colpad">
+        <div class="panel" style="flex:1">
+          <div class="toolbar">
+            <label class="field">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="4.6"/><path d="m10.6 10.6 3.2 3.2" stroke-linecap="round"/></svg>
+              <input id="q" type="search" placeholder="Filter instruments" autocomplete="off" aria-label="Filter instruments">
+            </label>
+            <div class="sorts" role="group" aria-label="Sort instruments">
+              <button data-sort="rank" aria-pressed="true">Cap</button>
+              <button data-sort="d5" aria-pressed="false">5-day</button>
+              <button data-sort="sd" aria-pressed="false">σ</button>
+              <button data-sort="oc" aria-pressed="false">Outliers</button>
+            </div>
+            <label class="switchline"><input type="checkbox" id="hide-flat"> Hide near-constant assets</label>
+          </div>
+          <div class="scroll" id="inst-list" role="listbox" aria-label="Cryptocurrencies"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- centre: focus ---------- -->
+    <div class="col col-mid">
+      <div class="colpad">
+        <div class="panel" style="flex:1">
+          <div class="focus-head">
+            <div class="focus-id">
+              <div class="sym-row">
+                <span class="sym mono" id="f-sym">—</span>
+                <span class="chip" id="f-trend">—</span>
+                <span id="f-flags"></span>
+              </div>
+              <div class="nm" id="f-name">—</div>
+            </div>
+            <div class="focus-price">
+              <div class="big mono" id="f-price">—</div>
+              <div class="sub mono" id="f-change">—</div>
+              <div class="bar-note mono" id="f-bar"></div>
+            </div>
+          </div>
+
+          <div class="charts">
+            <div class="chartbox">
+              <div class="hd">
+                <span class="t">Price · MA(3) · MA(5)</span>
+                <span class="readout" id="r-price">Drag across the chart to inspect</span>
+              </div>
+              <svg class="chart" id="c-price" viewBox="0 0 900 260" role="img" aria-label="Price with moving averages"></svg>
+              <div class="legend">
+                <span><i class="sw" style="background:var(--s1)"></i>Price</span>
+                <span><i class="sw" style="background:var(--s2)"></i>MA(3)</span>
+                <span><i class="sw" style="background:var(--s3)"></i>MA(5)</span>
+                <span id="r-trendnote"></span>
+              </div>
+            </div>
+
+            <div class="chartbox">
+              <div class="hd">
+                <span class="t">Hourly returns · Z-score outliers</span>
+                <span class="readout" id="r-ret">—</span>
+              </div>
+              <svg class="chart" id="c-ret" viewBox="0 0 900 170" role="img" aria-label="Returns with outliers"></svg>
+              <div class="legend">
+                <span><i class="sw" style="background:var(--ink-2)"></i>Return</span>
+                <span><i class="sw" style="background:var(--band);height:9px;border-radius:2px"></i>Mean ± 2σ</span>
+                <span><i class="sw dot" style="background:var(--gain)"></i>Positive outlier</span>
+                <span><i class="sw dot" style="background:var(--loss)"></i>Negative outlier</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="metrics" id="f-metrics"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- right: rankings & feed ---------- -->
+    <div class="col col-right">
+      <div class="colpad">
+        <div class="panel" style="flex:1 1 260px">
+          <div class="panel-head">
+            <h2>Volatility leaderboard</h2>
+            <span class="aside">σ of hourly returns</span>
+          </div>
+          <div class="scroll" id="lead-list"></div>
+        </div>
+
+        <div class="panel" style="flex:1 1 300px">
+          <div class="panel-head">
+            <h2>Outlier feed</h2>
+            <div class="seg" id="seg" role="tablist" aria-label="Outlier scope">
+              <button role="tab" data-mode="material" aria-selected="true">Material</button>
+              <button role="tab" data-mode="all" aria-selected="false">All</button>
+            </div>
+          </div>
+          <div class="balance">
+            <div class="bar" id="bal-bar" role="img" aria-label="Share of positive and negative outliers">
+              <i class="p" style="width:50%"></i><i class="n" style="width:50%"></i>
+            </div>
+            <div class="keys">
+              <span class="up">▲ <b id="bal-pos">—</b> positive</span>
+              <span class="down"><b id="bal-neg">—</b> negative ▼</span>
+            </div>
+            <div class="dirs" style="margin-top:9px" role="group" aria-label="Filter by direction">
+              <button data-dir="both" aria-pressed="true">Both</button>
+              <button data-dir="pos" aria-pressed="false">▲ Positive</button>
+              <button data-dir="neg" aria-pressed="false">▼ Negative</button>
+            </div>
+          </div>
+          <div class="scroll" id="feed-list"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Risk space · 3D</h2>
+            <span class="aside" id="r-scatter">Drag to rotate</span>
+          </div>
+          <div class="pad scene">
+            <svg class="chart" id="c-risk" viewBox="0 0 340 250" role="img" aria-label="Rotatable 3D scatter of volatility, return and market capitalisation"></svg>
+            <div class="hint">
+              <span><b style="color:var(--ink-2)">x</b> σ · <b style="color:var(--ink-2)">y</b> mean return · <b style="color:var(--ink-2)">z</b> market cap</span>
+              <span>depth = size</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footnote">
+    <b>Descriptive statistics, not financial advice.</b> Volatility is the population standard deviation of
+    percentage returns — scale-free, so coins at very different price levels compare directly. Outliers are
+    observations beyond |Z| &gt; 2 against each coin's own mean and σ; near-constant assets are flagged because a
+    0.03% move on a stablecoin registers as a 10σ event while meaning nothing economically.
+  </footer>
+</div>
+
+<script src="analysis_data.js"></script>
+<script>
+(function () {
+  "use strict";
+  const DATA = window.CRYPTO_DATA;
+  const $ = (s) => document.querySelector(s);
+  if (!DATA || !DATA.coins) {
+    $("#inst-list").innerHTML = '<p style="padding:20px;color:var(--ink-3)">Analysis data could not be loaded. Run <b>python main.py</b>, regenerate ui/analysis_data.js and republish.</p>';
+    return;
+  }
+  const meta = DATA.meta, coins = DATA.coins;
+  const byId = new Map(coins.map((c) => [c.id, c]));
+  const t0 = Date.parse(meta.windowStart.replace(" ", "T") + ":00Z");
+
+  /* ---------- formatters ---------- */
+  const price = (v) => {
+    if (v == null) return "—";
+    const a = Math.abs(v);
+    if (a >= 1000) return "$" + v.toLocaleString("en-US", { maximumFractionDigits: 0 });
+    if (a >= 1) return "$" + v.toFixed(2);
+    return "$" + v.toPrecision(4).replace(/0+$/, "").replace(/\.$/, "");
+  };
+  const cap = (v) => {
+    if (v == null) return "—";
+    const a = Math.abs(v);
+    if (a >= 1e12) return "$" + (v / 1e12).toFixed(2) + "T";
+    if (a >= 1e9) return "$" + (v / 1e9).toFixed(2) + "B";
+    if (a >= 1e6) return "$" + (v / 1e6).toFixed(0) + "M";
+    return "$" + v.toFixed(0);
+  };
+  const pct = (v, d = 2) => (v == null ? "—" : (v >= 0 ? "+" : "") + v.toFixed(d) + "%");
+  const sig = (v) => (v == null ? "—" : v >= 0.01 ? v.toFixed(3) + "%" : v.toFixed(4) + "%");
+  const cls = (v) => (v > 0 ? "up" : v < 0 ? "down" : "");
+  const when = (mins) => {
+    const d = new Date(t0 + mins * 60000);
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" }) +
+      " " + String(d.getUTCHours()).padStart(2, "0") + ":" + String(d.getUTCMinutes()).padStart(2, "0");
+  };
+
+  /* ---------- masthead ---------- */
+  $("#m-window").textContent = meta.windowStart + " → " + meta.windowEnd + " UTC";
+  $("#m-res").textContent = meta.intervalMinutes + "-minute bars";
+  $("#m-obs").textContent = meta.observations.toLocaleString("en-US");
+  const clock = () => {
+    $("#m-clock").textContent = new Date().toLocaleTimeString("en-US", { hour12: false });
+  };
+  clock(); setInterval(clock, 1000);
+
+  const themeBtn = $("#btn-theme");
+  themeBtn.addEventListener("click", () => {
+    const root = document.documentElement;
+    const dark = root.getAttribute("data-theme") !== "light" &&
+      !(root.getAttribute("data-theme") == null && window.matchMedia("(prefers-color-scheme: light)").matches);
+    root.setAttribute("data-theme", dark ? "light" : "dark");
+    themeBtn.textContent = dark ? "Night view" : "Day view";
+    draw();
+  });
+
+  /* ---------- KPIs ---------- */
+  const mostVol = coins.reduce((a, b) => (b.sd > a.sd ? b : a));
+  $("#k-adv").textContent = meta.advancers + " / " + meta.coins;
+  $("#k-adv-m").textContent = (meta.coins - meta.advancers) + " declined over the window";
+  const kmed = $("#k-med");
+  kmed.textContent = pct(meta.medianReturn);
+  kmed.classList.add(cls(meta.medianReturn));
+  $("#k-vol").textContent = mostVol.s;
+  $("#k-vol-m").textContent = sig(mostVol.sd) + " per hour · " + pct(mostVol.d5) + " over 5 days";
+  $("#k-out").textContent = meta.totalOutliers.toLocaleString("en-US");
+  $("#k-out-m").textContent = meta.extremeOutliers + " extreme (|Z| > 3) · " + meta.materialOutliers + " material";
+  $("#k-flat").textContent = meta.nearConstant;
+
+  /* ---------- ticker: biggest movers ---------- */
+  const movers = coins.filter((c) => !c.lv).slice().sort((a, b) => Math.abs(b.d5) - Math.abs(a.d5)).slice(0, 18);
+  const tickItem = (c) => '<span class="tick-item"><span class="sym">' + c.s + '</span><span class="px mono">' +
+    price(c.lp ?? c.p) + '</span><span class="mono ' + cls(c.d5) + '">' + pct(c.d5) + "</span></span>";
+  $("#ticker").innerHTML = movers.map(tickItem).join("") + movers.map(tickItem).join("");
+
+  /* ---------- sparkline ---------- */
+  function spark(c) {
+    const pts = c.pr.filter((v) => v != null);
+    const step = Math.max(1, Math.floor(pts.length / 26));
+    const s = pts.filter((_, i) => i % step === 0);
+    if (s.length < 2) return "";
+    const min = Math.min(...s), max = Math.max(...s), mid = (min + max) / 2;
+    // Floor the range so a stablecoin's 0.03% wobble does not fill the box.
+    const span = Math.max(max - min, Math.abs(mid) * 0.01) || 1;
+    const w = 54, h = 22, pad = 2.5;
+    const d = s.map((v, i) => (i ? "L" : "M") + ((i / (s.length - 1)) * w).toFixed(1) + " " +
+      (h - pad - ((v - (mid - span / 2)) / span) * (h - pad * 2)).toFixed(1)).join(" ");
+    return '<svg class="spark" viewBox="0 0 ' + w + " " + h + '" aria-hidden="true"><path d="' + d +
+      '" fill="none" stroke="' + (c.d5 >= 0 ? "var(--gain)" : "var(--loss)") +
+      '" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+  }
+
+  /* ---------- instrument list ---------- */
+  const state = { sort: "rank", q: "", hideFlat: false, sel: coins[0].id, feed: "material", dir: "both" };
+
+  function listed() {
+    let out = coins.slice();
+    if (state.hideFlat) out = out.filter((c) => !c.lv);
+    const q = state.q.trim().toLowerCase();
+    if (q) out = out.filter((c) => c.n.toLowerCase().includes(q) || c.s.toLowerCase().includes(q));
+    const k = state.sort;
+    out.sort((a, b) => (k === "rank" ? a.r - b.r : (b[k] ?? -Infinity) - (a[k] ?? -Infinity)));
+    return out;
+  }
+
+  function renderList() {
+    const rows = listed();
+    $("#inst-list").innerHTML = rows.length
+      ? rows.map((c) => '<button class="inst" role="option" data-coin="' + c.id + '" aria-current="' +
+          (c.id === state.sel) + '" aria-selected="' + (c.id === state.sel) + '">' +
+          '<span class="r mono">' + c.r + "</span>" +
+          '<span style="min-width:0"><span class="sym mono">' + c.s + '</span><span class="nm">' + c.n +
+          (c.lv ? " · flat" : "") + "</span></span>" +
+          spark(c) +
+          '<span><span class="px mono">' + price(c.lp ?? c.p) + '</span><br><span class="ch mono ' + cls(c.d5) + '">' +
+          pct(c.d5) + "</span></span></button>").join("")
+      : '<p style="padding:18px;color:var(--ink-3);font-size:12.5px">Nothing matches “' + state.q + '”.</p>';
+  }
+
+  /* ---------- leaderboard & feed ---------- */
+  function renderLeaders() {
+    const rows = coins.slice().sort((a, b) => b.sd - a.sd).slice(0, 40);
+    const max = rows[0].sd || 1;
+    $("#lead-list").innerHTML = rows.map((c, i) =>
+      '<button class="lead" data-coin="' + c.id + '">' +
+      '<span class="n mono">' + (i + 1) + "</span>" +
+      '<span><span class="lbl">' + c.s + " <small>" + c.n + "</small>" +
+      (c.hv ? ' <span class="chip warn" style="padding:1px 5px;font-size:9.5px">unusual</span>' : "") + "</span>" +
+      '<span class="track"><span class="fill' + (i < 10 ? " hot" : "") + '" style="width:' +
+      Math.max(2, (c.sd / max) * 100).toFixed(1) + '%"></span></span></span>' +
+      '<span class="v mono">' + sig(c.sd) + "</span></button>").join("");
+  }
+
+  function renderFeed() {
+    const scope = DATA.outliers.filter((o) => (state.feed === "material" ? !o.lv : true));
+    const pos = scope.filter((o) => o.t === "pos").length;
+    const neg = scope.length - pos;
+    const total = scope.length || 1;
+    $("#bal-pos").textContent = pos;
+    $("#bal-neg").textContent = neg;
+    const bar = $("#bal-bar");
+    bar.children[0].style.width = ((pos / total) * 100).toFixed(1) + "%";
+    bar.children[1].style.width = ((neg / total) * 100).toFixed(1) + "%";
+    bar.setAttribute("aria-label", pos + " positive and " + neg + " negative outliers");
+
+    const rows = scope
+      .filter((o) => (state.dir === "both" ? true : o.t === state.dir))
+      .slice(0, 120);
+    $("#feed-list").innerHTML = rows.length ? rows.map((o) => {
+      const c = coins.find((x) => x.s === o.s);
+      return '<button class="feed"' + (c ? ' data-coin="' + c.id + '"' : "") + ">" +
+        '<span class="arrow ' + o.t + '">' + (o.t === "pos" ? "▲" : "▼") + "</span>" +
+        '<span><span class="who">' + o.s + '</span><span class="when mono">' + o.d + "</span></span>" +
+        '<span><span class="num mono ' + (o.t === "pos" ? "up" : "down") + '">' + pct(o.rt) + "</span>" +
+        '<span class="z mono">Z ' + o.z.toFixed(2) + (o.x ? " ·  ext" : "") + "</span></span></button>";
+    }).join("") : '<p style="padding:16px;color:var(--ink-3);font-size:12px">No outliers in this direction.</p>';
+  }
+
+  /* ---------- charts ---------- */
+  function pricePath(c, W, H, L, R, T, B) {
+    const n = c.pr.length;
+    const all = [];
+    for (let i = 0; i < n; i++) [c.pr[i], c.m3[i], c.m5[i]].forEach((v) => { if (v != null) all.push(v); });
+    const min = Math.min(...all), max = Math.max(...all);
+    const span = (max - min) || Math.abs(max) * 0.01 || 1;
+    const lo = min - span * 0.1, hi = max + span * 0.1;
+    const sx = (i) => L + (i / (n - 1)) * (W - L - R);
+    const sy = (v) => H - B - ((v - lo) / (hi - lo)) * (H - T - B);
+    const path = (arr) => {
+      let d = "", on = false;
+      arr.forEach((v, i) => {
+        if (v == null) { on = false; return; }
+        d += (on ? "L" : "M") + sx(i).toFixed(1) + " " + sy(v).toFixed(1) + " "; on = true;
+      });
+      return d.trim();
+    };
+    return { n: n, lo: lo, hi: hi, sx: sx, sy: sy, path: path };
+  }
+
+  function drawPrice(c) {
+    const W = 900, H = 260, L = 74, R = 16, T = 14, B = 26;
+    const g = pricePath(c, W, H, L, R, T, B);
+    let s = "";
+    for (let i = 0; i <= 4; i++) {
+      const v = g.lo + ((g.hi - g.lo) * i) / 4, y = g.sy(v);
+      s += '<line class="grid-line" x1="' + L + '" y1="' + y.toFixed(1) + '" x2="' + (W - R) + '" y2="' + y.toFixed(1) + '"/>' +
+        '<text class="axis-text" x="' + (L - 8) + '" y="' + (y + 3.5).toFixed(1) + '" text-anchor="end">' + price(v) + "</text>";
+    }
+    const areaD = g.path(c.pr) + " L" + g.sx(g.n - 1).toFixed(1) + " " + (H - B) + " L" + g.sx(0).toFixed(1) + " " + (H - B) + " Z";
+    s += '<path class="area" d="' + areaD + '"/>';
+    s += '<path class="line l3" d="' + g.path(c.m5) + '"/>';
+    s += '<path class="line l2" d="' + g.path(c.m3) + '"/>';
+    s += '<path class="line l1" d="' + g.path(c.pr) + '"/>';
+    s += '<circle cx="' + g.sx(g.n - 1).toFixed(1) + '" cy="' + g.sy(c.pr[g.n - 1]).toFixed(1) +
+      '" r="5" fill="var(--s1)" stroke="var(--panel-2)" stroke-width="2"/>';
+    const ticks = 6;
+    for (let i = 0; i < ticks; i++) {
+      const idx = Math.round((i / (ticks - 1)) * (g.n - 1));
+      s += '<text class="axis-text" x="' + g.sx(idx).toFixed(1) + '" y="' + (H - 7) + '" text-anchor="' +
+        (i === 0 ? "start" : i === ticks - 1 ? "end" : "middle") + '">' + when(c.ts[idx]) + "</text>";
+    }
+    $("#c-price").innerHTML = s;
+    return g;
+  }
+
+  function drawReturns(c) {
+    const W = 900, H = 170, L = 74, R = 16, T = 12, B = 24;
+    const vals = c.rt.filter((v) => v != null);
+    if (!vals.length) { $("#c-ret").innerHTML = ""; return null; }
+    const mean = vals.reduce((a, b) => a + b, 0) / vals.length, sd = c.sd;
+    const min = Math.min(...vals), max = Math.max(...vals), span = (max - min) || 0.2;
+    const lo = min - span * 0.18, hi = max + span * 0.18, n = c.rt.length;
+    const sx = (i) => L + (i / (n - 1)) * (W - L - R);
+    const sy = (v) => H - B - ((v - lo) / (hi - lo)) * (H - T - B);
+    let s = "";
+    const bt = sy(mean + 2 * sd), bb = sy(mean - 2 * sd);
+    s += '<rect class="bandfill" x="' + L + '" y="' + Math.min(bt, bb).toFixed(1) + '" width="' + (W - L - R) +
+      '" height="' + Math.abs(bb - bt).toFixed(1) + '"/>';
+    for (let i = 0; i <= 3; i++) {
+      const v = lo + ((hi - lo) * i) / 3, y = sy(v);
+      s += '<line class="grid-line" x1="' + L + '" y1="' + y.toFixed(1) + '" x2="' + (W - R) + '" y2="' + y.toFixed(1) + '"/>' +
+        '<text class="axis-text" x="' + (L - 8) + '" y="' + (y + 3.5).toFixed(1) + '" text-anchor="end">' + v.toFixed(2) + "%</text>";
+    }
+    s += '<line class="meanline" x1="' + L + '" y1="' + sy(mean).toFixed(1) + '" x2="' + (W - R) + '" y2="' + sy(mean).toFixed(1) + '"/>';
+    let d = "", on = false;
+    c.rt.forEach((v, i) => {
+      if (v == null) { on = false; return; }
+      d += (on ? "L" : "M") + sx(i).toFixed(1) + " " + sy(v).toFixed(1) + " "; on = true;
+    });
+    s += '<path class="retline" d="' + d.trim() + '"/>';
+    const ext = new Set(c.oe);
+    c.oi.forEach((i) => {
+      const v = c.rt[i]; if (v == null) return;
+      const x = sx(i), y = sy(v), r = ext.has(i) ? 7 : 5;
+      s += v >= 0
+        ? '<path class="mk-up" d="M' + x.toFixed(1) + " " + (y - r).toFixed(1) + "L" + (x + r * 0.9).toFixed(1) + " " + (y + r * 0.75).toFixed(1) + "L" + (x - r * 0.9).toFixed(1) + " " + (y + r * 0.75).toFixed(1) + 'Z"/>'
+        : '<path class="mk-dn" d="M' + x.toFixed(1) + " " + (y + r).toFixed(1) + "L" + (x + r * 0.9).toFixed(1) + " " + (y - r * 0.75).toFixed(1) + "L" + (x - r * 0.9).toFixed(1) + " " + (y - r * 0.75).toFixed(1) + 'Z"/>';
+    });
+    $("#c-ret").innerHTML = s;
+    $("#r-ret").innerHTML = "<b>" + c.oc + "</b> flagged · <b>" + c.ec + "</b> extreme · σ " + sig(c.sd);
+    return { sx: sx, sy: sy, n: n };
+  }
+
+  /* ---------- 3D risk space ----------
+     Three real measures on three axes: σ (x), mean return (y), log market cap (z).
+     Points are projected with yaw/pitch rotation and weak perspective, then
+     painted back-to-front so nearer coins sit above farther ones. */
+  const view3d = { yaw: -0.62, pitch: 0.42, auto: true };
+  const cube = [[-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1], [-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1]];
+  const edges = [[0, 1], [1, 2], [2, 3], [3, 0], [4, 5], [5, 6], [6, 7], [7, 4], [0, 4], [1, 5], [2, 6], [3, 7]];
+
+  const space = (() => {
+    const pts = coins.filter((c) => c.sd != null && c.mean != null && c.mc > 0);
+    const rng = (vals) => { const lo = Math.min(...vals), hi = Math.max(...vals); return { lo: lo, hi: hi, span: (hi - lo) || 1 }; };
+    const rx = rng(pts.map((p) => p.sd));
+    const ry = rng(pts.map((p) => p.mean));
+    const rz = rng(pts.map((p) => Math.log10(p.mc)));
+    return {
+      pts: pts, rx: rx, ry: ry, rz: rz,
+      norm: (p) => [
+        ((p.sd - rx.lo) / rx.span) * 2 - 1,
+        ((p.mean - ry.lo) / ry.span) * 2 - 1,
+        ((Math.log10(p.mc) - rz.lo) / rz.span) * 2 - 1,
+      ],
+    };
+  })();
+
+  function project(v, cx, cy, scale) {
+    const cy1 = Math.cos(view3d.yaw), sy1 = Math.sin(view3d.yaw);
+    const cp = Math.cos(view3d.pitch), sp = Math.sin(view3d.pitch);
+    const x1 = v[0] * cy1 + v[2] * sy1;
+    const z1 = -v[0] * sy1 + v[2] * cy1;
+    const y1 = v[1] * cp - z1 * sp;
+    const z2 = v[1] * sp + z1 * cp;
+    const depth = 4.2;
+    const k = depth / (depth - z2);            // weak perspective
+    return { x: cx + x1 * scale * k, y: cy - y1 * scale * k, z: z2, k: k };
+  }
+
+  function drawRisk() {
+    const W = 340, H = 250, cx = W / 2, cy = H / 2 - 4, scale = 72;
+    const P = cube.map((v) => project(v, cx, cy, scale));
+    let back = "", front = "";
+    edges.forEach(([a, b]) => {
+      const far = (P[a].z + P[b].z) / 2 < 0;
+      const seg = '<line class="cube-edge' + (far ? " back" : "") + '" x1="' + P[a].x.toFixed(1) + '" y1="' +
+        P[a].y.toFixed(1) + '" x2="' + P[b].x.toFixed(1) + '" y2="' + P[b].y.toFixed(1) + '"/>';
+      if (far) back += seg; else front += seg;
+    });
+
+    // Axis tips, labelled with the real range each axis spans.
+    const tips = [
+      [[1.28, -1, -1], "σ " + sig(space.rx.hi)],
+      [[-1, 1.3, -1], pct(space.ry.hi, 3)],
+      [[-1, -1, 1.3], cap(Math.pow(10, space.rz.hi))],
+    ].map(([v, label]) => {
+      const p = project(v, cx, cy, scale);
+      return '<text class="axis-tip" x="' + p.x.toFixed(1) + '" y="' + p.y.toFixed(1) + '" text-anchor="middle">' + label + "</text>";
+    }).join("");
+
+    const nodes = space.pts.map((p) => {
+      const q = project(space.norm(p), cx, cy, scale);
+      return { p: p, q: q };
+    }).sort((a, b) => a.q.z - b.q.z);  // painter's algorithm: far first
+
+    const marks = nodes.map(({ p, q }) => {
+      const r = (p.lv ? 3.1 : 4.2) * q.k;                 // nearer = larger
+      const fade = 0.45 + 0.55 * ((q.z + 1.6) / 3.2);      // nearer = more opaque
+      const fill = p.lv ? "var(--ink-3)" : p.d5 >= 0 ? "var(--gain)" : "var(--loss)";
+      return '<circle class="node" data-coin="' + p.id + '" cx="' + q.x.toFixed(1) + '" cy="' + q.y.toFixed(1) +
+        '" r="' + r.toFixed(2) + '" fill="' + fill + '" opacity="' + Math.min(1, fade).toFixed(2) + '">' +
+        "<title>" + p.n + " · σ " + sig(p.sd) + " · mean " + pct(p.mean, 3) + " · cap " + cap(p.mc) + "</title></circle>";
+    }).join("");
+
+    $("#c-risk").innerHTML = back + marks + front + tips;
+  }
+
+  /* drag to rotate; the slow drift stops as soon as anyone takes hold */
+  (function orbit() {
+    const svg = $("#c-risk");
+    let dragging = false, lastX = 0, lastY = 0;
+    svg.addEventListener("pointerdown", (e) => {
+      dragging = true; view3d.auto = false; lastX = e.clientX; lastY = e.clientY;
+      svg.setPointerCapture(e.pointerId);
+    });
+    svg.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      view3d.yaw += (e.clientX - lastX) * 0.01;
+      view3d.pitch = Math.max(-1.2, Math.min(1.2, view3d.pitch + (e.clientY - lastY) * 0.008));
+      lastX = e.clientX; lastY = e.clientY;
+      drawRisk();
+    });
+    const stop = () => { dragging = false; };
+    svg.addEventListener("pointerup", stop);
+    svg.addEventListener("pointercancel", stop);
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setInterval(() => {
+      if (!view3d.auto || dragging || reduced.matches) return;
+      view3d.yaw += 0.0035;
+      drawRisk();
+    }, 60);
+  })();
+
+  /* ---------- focus panel ---------- */
+  let priceGeom = null;
+  function drawFocus() {
+    const c = byId.get(state.sel);
+    if (!c) return;
+    $("#f-sym").textContent = c.s;
+    $("#f-name").textContent = c.n + " · rank " + c.r + " by market cap · " + cap(c.mc) + " · 24h volume " + cap(c.v);
+    $("#f-price").textContent = price(c.lp ?? c.p);
+    $("#f-bar").textContent = c.lp != null ? "live snapshot · last hourly bar " + price(c.p) : "last hourly bar";
+    const ch = $("#f-change");
+    ch.textContent = pct(c.d5) + " over 5 days";
+    ch.className = "sub mono " + cls(c.d5);
+    const trend = $("#f-trend");
+    trend.textContent = c.t;
+    trend.className = "chip " + (c.t === "Bullish" ? "bull" : c.t === "Bearish" ? "bear" : "");
+    $("#r-trendnote").textContent = c.t === "Bullish" ? "Price > MA(3) > MA(5)"
+      : c.t === "Bearish" ? "Price < MA(3) < MA(5)" : "mixed ordering";
+    const flags = [];
+    if (c.hv) flags.push('<span class="chip warn">unusually high σ</span>');
+    if (c.lv) flags.push('<span class="chip">near-constant</span>');
+    if (c.an) flags.push('<span class="chip warn">anomaly</span>');
+    $("#f-flags").innerHTML = flags.join(" ");
+
+    $("#f-metrics").innerHTML = [
+      ["Std deviation", sig(c.sd), "volatility rank " + c.vr],
+      ["Annualised", c.av != null ? c.av.toFixed(0) + "%" : "—", "24/7 scaling"],
+      ["Mean return", pct(c.mean, 3), "per hour"],
+      ["Max drawdown", pct(c.dd, 2), "peak to trough"],
+      ["MA(3)", price(c.ma3), "3-hour"],
+      ["MA(5)", price(c.ma5), "5-hour"],
+      ["Positive outliers", "▲ " + c.po, "unusually large gains", "up"],
+      ["Negative outliers", "▼ " + c.no, "unusually large losses", "down"],
+      ["Extreme", String(c.ec), "|Z| > 3"],
+      ["Quadrant", c.q.split(" / ")[0], c.q.split(" / ")[1] || ""],
+    ].map(([k, v, m, tone]) => '<div class="metric"><div class="k">' + k + '</div><div class="v mono' +
+      (tone ? " " + tone : "") + '">' + v + '</div><div class="m">' + m + "</div></div>").join("");
+
+    priceGeom = drawPrice(c);
+    drawReturns(c);
+    attachScrub(c);
+  }
+
+  function draw() { drawFocus(); drawRisk(); }
+
+  /* ---------- scrubbing ---------- */
+  function attachScrub(c) {
+    const svg = $("#c-price"), out = $("#r-price");
+    const ns = "http://www.w3.org/2000/svg";
+    const line = document.createElementNS(ns, "line");
+    line.setAttribute("class", "cursor"); line.setAttribute("y1", 14); line.setAttribute("y2", 234);
+    line.setAttribute("opacity", 0);
+    const dot = document.createElementNS(ns, "circle");
+    dot.setAttribute("r", 5); dot.setAttribute("fill", "var(--s1)");
+    dot.setAttribute("stroke", "var(--panel-2)"); dot.setAttribute("stroke-width", 2); dot.setAttribute("opacity", 0);
+    svg.append(line, dot);
+    const move = (e) => {
+      if (!priceGeom) return;
+      const box = svg.getBoundingClientRect();
+      const x = ((e.clientX - box.left) / box.width) * 900;
+      let i = Math.round(((x - 74) / (900 - 90)) * (priceGeom.n - 1));
+      i = Math.max(0, Math.min(priceGeom.n - 1, i));
+      if (c.pr[i] == null) return;
+      const px = priceGeom.sx(i), py = priceGeom.sy(c.pr[i]);
+      line.setAttribute("x1", px); line.setAttribute("x2", px); line.setAttribute("opacity", 1);
+      dot.setAttribute("cx", px); dot.setAttribute("cy", py); dot.setAttribute("opacity", 1);
+      out.innerHTML = "<b>" + price(c.pr[i]) + "</b> · " + when(c.ts[i]) + " UTC" +
+        (c.m3[i] != null ? " · MA(3) " + price(c.m3[i]) : "") +
+        (c.rt[i] != null ? " · " + pct(c.rt[i], 3) : "");
+    };
+    svg.addEventListener("pointermove", move);
+    svg.addEventListener("pointerdown", move);
+    svg.addEventListener("pointerleave", () => {
+      line.setAttribute("opacity", 0); dot.setAttribute("opacity", 0);
+      out.textContent = "Drag across the chart to inspect";
+    });
+  }
+
+  /* ---------- interaction ---------- */
+  function select(id) {
+    if (!byId.has(id) || id === state.sel) return;
+    state.sel = id;
+    document.querySelectorAll(".inst").forEach((el) => {
+      const on = el.dataset.coin === id;
+      el.setAttribute("aria-current", String(on));
+      el.setAttribute("aria-selected", String(on));
+    });
+    drawFocus();
+  }
+  document.addEventListener("click", (e) => {
+    const el = e.target.closest("[data-coin]");
+    if (el) select(el.dataset.coin);
+  });
+  $("#c-risk").addEventListener("pointerover", (e) => {
+    const d = e.target.closest(".node");
+    if (!d) return;
+    const c = byId.get(d.dataset.coin);
+    if (c) $("#r-scatter").innerHTML = c.s + " · σ " + sig(c.sd) + " · " + pct(c.mean, 3) + " · " + cap(c.mc);
+  });
+  $("#q").addEventListener("input", (e) => { state.q = e.target.value; renderList(); });
+  document.querySelectorAll(".sorts button").forEach((b) => {
+    b.addEventListener("click", () => {
+      document.querySelectorAll(".sorts button").forEach((x) => x.setAttribute("aria-pressed", "false"));
+      b.setAttribute("aria-pressed", "true");
+      state.sort = b.dataset.sort; renderList();
+    });
+  });
+  $("#hide-flat").addEventListener("change", (e) => { state.hideFlat = e.target.checked; renderList(); });
+  document.querySelectorAll("#seg button").forEach((b) => {
+    b.addEventListener("click", () => {
+      document.querySelectorAll("#seg button").forEach((x) => x.setAttribute("aria-selected", "false"));
+      b.setAttribute("aria-selected", "true");
+      state.feed = b.dataset.mode; renderFeed();
+    });
+  });
+  document.querySelectorAll(".dirs button").forEach((b) => {
+    b.addEventListener("click", () => {
+      document.querySelectorAll(".dirs button").forEach((x) => x.setAttribute("aria-pressed", "false"));
+      b.setAttribute("aria-pressed", "true");
+      state.dir = b.dataset.dir; renderFeed();
+    });
+  });
+  // keyboard: move through the instrument list
+  $("#inst-list").addEventListener("keydown", (e) => {
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    e.preventDefault();
+    const rows = [...document.querySelectorAll(".inst")];
+    const i = rows.findIndex((r) => r.dataset.coin === state.sel);
+    const next = rows[Math.max(0, Math.min(rows.length - 1, i + (e.key === "ArrowDown" ? 1 : -1)))];
+    if (next) { next.focus(); select(next.dataset.coin); }
+  });
+
+  /* ---------- state survives the live server's auto-reload ---------- */
+  const STATE_KEY = "risk-room-state";
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(STATE_KEY) || "null");
+    if (saved) {
+      if (byId.has(saved.sel)) state.sel = saved.sel;
+      ["sort", "q", "feed", "dir"].forEach((k) => { if (typeof saved[k] === "string") state[k] = saved[k]; });
+      state.hideFlat = !!saved.hideFlat;
+      sessionStorage.removeItem(STATE_KEY);
+    }
+  } catch (e) { /* storage unavailable: start from defaults */ }
+  window.__captureState = () => {
+    try { sessionStorage.setItem(STATE_KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
+  };
+  $("#q").value = state.q;
+  $("#hide-flat").checked = state.hideFlat;
+  document.querySelectorAll(".sorts button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.sort === state.sort)));
+  document.querySelectorAll("#seg button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.mode === state.feed)));
+  document.querySelectorAll(".dirs button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.dir === state.dir)));
+
+  /* ---------- boot ---------- */
+  renderList(); renderLeaders(); renderFeed(); draw();
+  window.addEventListener("resize", () => { clearTimeout(window.__rz); window.__rz = setTimeout(draw, 180); });
+})();
+</script>

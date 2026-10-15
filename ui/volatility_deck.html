@@ -1,0 +1,1044 @@
+<title>Volatility Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    color-scheme: light;
+    --page: #eceef2;
+    --page-2: #dfe3ea;
+    --bezel: #1b1f27;
+    --bezel-edge: #40464f;
+    --surface: #f7f8fa;
+    --surface-2: #ffffff;
+    --surface-3: #eef0f4;
+    --chip: #e7eaf0;
+    --ink: #0b0f14;
+    --ink-2: #4a5360;
+    --ink-3: #848d9b;
+    --hairline: #dfe3e9;
+    --hairline-2: #e9ecf1;
+    --accent: #2a78d6;
+    --accent-soft: rgba(42, 120, 214, 0.12);
+    --gain: #0a9d4a;
+    --gain-soft: rgba(10, 157, 74, 0.12);
+    --loss: #d03b3b;
+    --loss-soft: rgba(208, 59, 59, 0.12);
+    --warn: #b7791f;
+    --warn-soft: rgba(183, 121, 31, 0.14);
+    --series-1: #2a78d6;
+    --series-2: #eb6834;
+    --series-3: #1baf7a;
+    --band: rgba(132, 141, 155, 0.16);
+    --grid: #e6e9ee;
+    --shadow: 0 30px 70px rgba(11, 15, 20, 0.28), 0 8px 20px rgba(11, 15, 20, 0.14);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page: #0a0c10;
+      --page-2: #121620;
+      --bezel: #06070a;
+      --bezel-edge: #2c323c;
+      --surface: #101319;
+      --surface-2: #171b23;
+      --surface-3: #1d222b;
+      --chip: #222834;
+      --ink: #f4f6f9;
+      --ink-2: #a8b2c0;
+      --ink-3: #78828f;
+      --hairline: #232833;
+      --hairline-2: #1b202a;
+      --accent: #4a90e8;
+      --accent-soft: rgba(74, 144, 232, 0.18);
+      --gain: #2ec26a;
+      --gain-soft: rgba(46, 194, 106, 0.16);
+      --loss: #e5625f;
+      --loss-soft: rgba(229, 98, 95, 0.16);
+      --warn: #d9a441;
+      --warn-soft: rgba(217, 164, 65, 0.16);
+      --series-1: #4a90e8;
+      --series-2: #e07a48;
+      --series-3: #27b98a;
+      --band: rgba(168, 178, 192, 0.14);
+      --grid: #232833;
+      --shadow: 0 30px 70px rgba(0, 0, 0, 0.6), 0 8px 20px rgba(0, 0, 0, 0.45);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0a0c10;
+    --page-2: #121620;
+    --bezel: #06070a;
+    --bezel-edge: #2c323c;
+    --surface: #101319;
+    --surface-2: #171b23;
+    --surface-3: #1d222b;
+    --chip: #222834;
+    --ink: #f4f6f9;
+    --ink-2: #a8b2c0;
+    --ink-3: #78828f;
+    --hairline: #232833;
+    --hairline-2: #1b202a;
+    --accent: #4a90e8;
+    --accent-soft: rgba(74, 144, 232, 0.18);
+    --gain: #2ec26a;
+    --gain-soft: rgba(46, 194, 106, 0.16);
+    --loss: #e5625f;
+    --loss-soft: rgba(229, 98, 95, 0.16);
+    --warn: #d9a441;
+    --warn-soft: rgba(217, 164, 65, 0.16);
+    --series-1: #4a90e8;
+    --series-2: #e07a48;
+    --series-3: #27b98a;
+    --band: rgba(168, 178, 192, 0.14);
+    --grid: #232833;
+    --shadow: 0 30px 70px rgba(0, 0, 0, 0.6), 0 8px 20px rgba(0, 0, 0, 0.45);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: radial-gradient(120% 90% at 50% 0%, var(--page-2) 0%, var(--page) 62%);
+    color: var(--ink);
+    font-family: "Figtree", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace; font-variant-numeric: tabular-nums; }
+
+  /* ---------- Stage & device frame ---------- */
+  .stage {
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(24px, 4vw, 64px);
+    padding: clamp(20px, 4vw, 48px) 16px;
+    flex-wrap: wrap;
+  }
+  .provenance { max-width: 330px; display: none; }
+  .provenance .eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); margin: 0 0 10px;
+  }
+  .provenance h1 { font-size: 34px; line-height: 1.08; margin: 0 0 12px; letter-spacing: -0.02em; text-wrap: balance; }
+  .provenance p { color: var(--ink-2); font-size: 14px; line-height: 1.6; margin: 0 0 14px; }
+  .provenance dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; font-size: 12.5px; }
+  .provenance dt { color: var(--ink-3); }
+  .provenance dd { margin: 0; color: var(--ink); font-weight: 600; }
+  .provenance .note {
+    margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--hairline);
+    font-size: 11.5px; color: var(--ink-3); line-height: 1.55;
+  }
+
+  .device {
+    position: relative;
+    width: 390px;
+    height: 844px;
+    max-height: calc(100dvh - 48px);
+    background: var(--bezel);
+    border-radius: 56px;
+    padding: 12px;
+    box-shadow: var(--shadow);
+    flex: none;
+  }
+  .device::after {
+    content: ""; position: absolute; inset: 0; border-radius: 56px;
+    border: 1px solid var(--bezel-edge); pointer-events: none;
+  }
+  .screen {
+    position: relative;
+    height: 100%;
+    border-radius: 44px;
+    overflow: hidden;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ---------- Status bar / island ---------- */
+  .statusbar {
+    height: 52px; flex: none; display: flex; align-items: flex-end; justify-content: space-between;
+    padding: 0 28px 6px; font-size: 14px; font-weight: 600; letter-spacing: 0.01em; color: var(--ink);
+    position: relative; z-index: 6;
+  }
+  .island {
+    position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    width: 118px; height: 32px; border-radius: 20px; background: #05070a; z-index: 7;
+  }
+  .status-icons { display: flex; align-items: center; gap: 6px; }
+  .status-icons svg { display: block; }
+
+  /* ---------- App chrome ---------- */
+  .app { flex: 1; min-height: 0; position: relative; }
+  .view {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    background: var(--surface);
+  }
+  .view[hidden] { display: none !important; }
+  .scroll { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 18px; }
+  .scroll::-webkit-scrollbar { width: 0; }
+
+  .titlebar { padding: 6px 20px 10px; flex: none; }
+  .titlebar h2 { font-size: 30px; line-height: 1.1; margin: 0; letter-spacing: -0.022em; }
+  .titlebar .sub { font-size: 12.5px; color: var(--ink-3); margin: 5px 0 0; }
+
+  /* ---------- Summary tiles ---------- */
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 2px 20px 14px; }
+  .tile { background: var(--surface-2); border: 1px solid var(--hairline); border-radius: 14px; padding: 10px 11px; }
+  .tile .k { font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-3); font-weight: 600; }
+  .tile .v { font-size: 19px; font-weight: 700; margin-top: 3px; letter-spacing: -0.01em; }
+  .tile .m { font-size: 10.5px; color: var(--ink-3); margin-top: 1px; }
+
+  /* ---------- Controls ---------- */
+  .searchwrap { padding: 0 20px 10px; flex: none; }
+  .search {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--chip); border-radius: 12px; padding: 9px 12px;
+  }
+  .search input {
+    border: 0; background: none; outline: none; width: 100%;
+    font: inherit; font-size: 15px; color: var(--ink);
+  }
+  .search input::placeholder { color: var(--ink-3); }
+  .search svg { flex: none; color: var(--ink-3); }
+
+  .chips { display: flex; gap: 7px; padding: 0 20px 12px; overflow-x: auto; flex: none; scrollbar-width: none; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    flex: none; border: 1px solid var(--hairline); background: var(--surface-2); color: var(--ink-2);
+    border-radius: 999px; padding: 6px 13px; font-size: 12.5px; font-weight: 600; cursor: pointer;
+    font-family: inherit; transition: background .15s, color .15s, border-color .15s;
+  }
+  .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .switchrow {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    margin: 0 20px 12px; padding: 11px 14px; background: var(--surface-2);
+    border: 1px solid var(--hairline); border-radius: 14px;
+  }
+  .switchrow .lab { font-size: 13px; font-weight: 600; }
+  .switchrow .hint { font-size: 11px; color: var(--ink-3); margin-top: 2px; line-height: 1.4; }
+  .switch {
+    flex: none; width: 50px; height: 30px; border-radius: 999px; border: 0; cursor: pointer;
+    background: var(--chip); position: relative; transition: background .18s;
+  }
+  .switch::after {
+    content: ""; position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%;
+    background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.28); transition: transform .18s;
+  }
+  .switch[aria-checked="true"] { background: var(--gain); }
+  .switch[aria-checked="true"]::after { transform: translateX(20px); }
+
+  .segmented {
+    display: flex; gap: 3px; margin: 0 20px 14px; padding: 3px;
+    background: var(--chip); border-radius: 11px; flex: none;
+  }
+  .segmented button {
+    flex: 1; border: 0; background: none; font: inherit; font-size: 12.5px; font-weight: 600;
+    color: var(--ink-2); padding: 7px 4px; border-radius: 9px; cursor: pointer; transition: background .15s, color .15s;
+  }
+  .segmented button[aria-selected="true"] { background: var(--surface-2); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.10); }
+
+  /* ---------- Lists ---------- */
+  .list { padding: 0 12px; }
+  .row {
+    display: grid; grid-template-columns: 30px 1fr 62px auto; align-items: center; gap: 10px;
+    width: 100%; text-align: left; padding: 10px 8px; border: 0; background: none; cursor: pointer;
+    border-radius: 14px; font: inherit; color: var(--ink); transition: background .12s;
+  }
+  .row + .row { box-shadow: inset 0 1px 0 var(--hairline-2); }
+  .row:hover, .row:focus-visible { background: var(--surface-3); outline: none; }
+  .row .rank { font-size: 11.5px; color: var(--ink-3); text-align: right; }
+  .row .name { font-size: 14.5px; font-weight: 650; line-height: 1.2; letter-spacing: -0.01em; }
+  .row .tick { font-size: 11px; color: var(--ink-3); margin-top: 2px; display: flex; align-items: center; gap: 5px; }
+  .row .price { font-size: 14px; font-weight: 650; text-align: right; }
+  .spark { width: 62px; height: 26px; display: block; }
+  .pill {
+    display: inline-flex; align-items: center; justify-content: flex-end; gap: 3px;
+    min-width: 72px; padding: 5px 9px; border-radius: 9px; font-size: 12.5px; font-weight: 700;
+  }
+  .pill.up { background: var(--gain-soft); color: var(--gain); }
+  .pill.down { background: var(--loss-soft); color: var(--loss); }
+  .pill.flat { background: var(--chip); color: var(--ink-2); }
+  .tag {
+    font-size: 9.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 2px 5px; border-radius: 5px; background: var(--chip); color: var(--ink-3);
+  }
+  .tag.warn { background: var(--warn-soft); color: var(--warn); }
+  .empty { padding: 34px 24px; text-align: center; color: var(--ink-3); font-size: 13px; line-height: 1.6; }
+
+  /* ---------- Volatility bars ---------- */
+  .vrow {
+    display: grid; grid-template-columns: 24px 1fr 58px; align-items: center; gap: 10px;
+    width: 100%; padding: 9px 8px; border: 0; background: none; cursor: pointer; border-radius: 12px;
+    font: inherit; color: var(--ink); text-align: left;
+  }
+  .vrow:hover, .vrow:focus-visible { background: var(--surface-3); outline: none; }
+  .vrow .n { font-size: 11px; color: var(--ink-3); text-align: right; }
+  .vrow .lab { font-size: 13px; font-weight: 600; margin-bottom: 5px; display: flex; gap: 6px; align-items: center; }
+  /* display:block matters - a bare inline span ignores height and draws nothing */
+  .bartrack { display: block; height: 7px; background: var(--surface-3); border-radius: 4px; overflow: hidden; }
+  .bar { display: block; height: 100%; border-radius: 4px; background: var(--ink-3); }
+  .bar.hot { background: var(--accent); }
+  .vrow .val { font-size: 12.5px; font-weight: 650; text-align: right; }
+
+  /* ---------- Outlier rows ---------- */
+  .orow {
+    display: grid; grid-template-columns: 26px 1fr auto; gap: 10px; align-items: center;
+    width: 100%; padding: 10px 8px; border: 0; background: none; border-radius: 12px;
+    font: inherit; color: var(--ink); text-align: left; cursor: pointer;
+  }
+  .orow + .orow { box-shadow: inset 0 1px 0 var(--hairline-2); }
+  .orow:hover, .orow:focus-visible { background: var(--surface-3); outline: none; }
+  .dir { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; font-size: 12px; font-weight: 800; }
+  .dir.pos { background: var(--gain-soft); color: var(--gain); }
+  .dir.neg { background: var(--loss-soft); color: var(--loss); }
+  .orow .who { font-size: 13.5px; font-weight: 650; }
+  .orow .when { font-size: 11px; color: var(--ink-3); margin-top: 2px; }
+  .orow .num { text-align: right; font-size: 13.5px; font-weight: 700; }
+  .orow .z { font-size: 10.5px; color: var(--ink-3); margin-top: 2px; }
+
+  /* ---------- Notes ---------- */
+  .note {
+    margin: 0 20px 14px; padding: 11px 13px; background: var(--surface-2);
+    border: 1px solid var(--hairline); border-left: 3px solid var(--accent); border-radius: 12px;
+    font-size: 11.5px; line-height: 1.55; color: var(--ink-2);
+  }
+  .note b { color: var(--ink); font-weight: 700; }
+
+  /* ---------- Detail ---------- */
+  .detail { z-index: 5; }
+  .navbar {
+    display: flex; align-items: center; gap: 4px; padding: 2px 12px 8px; flex: none;
+  }
+  .back {
+    display: inline-flex; align-items: center; gap: 3px; border: 0; background: none; cursor: pointer;
+    color: var(--accent); font: inherit; font-size: 15px; font-weight: 600; padding: 6px 8px; border-radius: 9px;
+  }
+  .back:hover, .back:focus-visible { background: var(--accent-soft); outline: none; }
+  .hero { padding: 4px 20px 12px; }
+  .hero .who { display: flex; align-items: center; gap: 9px; }
+  .badge {
+    width: 34px; height: 34px; border-radius: 10px; background: var(--accent-soft); color: var(--accent);
+    display: grid; place-items: center; font-size: 12px; font-weight: 800; letter-spacing: -0.02em;
+  }
+  .hero h3 { margin: 0; font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+  .hero .rank { font-size: 11.5px; color: var(--ink-3); margin-top: 1px; }
+  .hero .figure { font-size: 38px; font-weight: 750; letter-spacing: -0.03em; margin: 12px 0 6px; line-height: 1; }
+  .hero .row2 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .trend {
+    display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 9px;
+    font-size: 12px; font-weight: 700; background: var(--chip); color: var(--ink-2);
+  }
+  .trend.bull { background: var(--gain-soft); color: var(--gain); }
+  .trend.bear { background: var(--loss-soft); color: var(--loss); }
+  .flags { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 20px 12px; }
+
+  .chartcard { margin: 0 20px 14px; background: var(--surface-2); border: 1px solid var(--hairline); border-radius: 16px; padding: 12px 12px 8px; }
+  .chartcard .head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 2px; }
+  .chartcard .title { font-size: 12px; font-weight: 700; }
+  .chartcard .readout { font-size: 11px; color: var(--ink-3); }
+  .chartcard .readout b { color: var(--ink); font-weight: 700; }
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px; font-size: 10.5px; color: var(--ink-2); }
+  .legend span { display: inline-flex; align-items: center; gap: 5px; }
+  .swatch { width: 12px; height: 3px; border-radius: 2px; display: inline-block; }
+  .swatch.dot { width: 9px; height: 9px; border-radius: 50%; }
+  svg.chart { width: 100%; height: auto; display: block; touch-action: pan-y; cursor: crosshair; }
+  .grid-line { stroke: var(--grid); stroke-width: 1; }
+  .axis-text { fill: var(--ink-3); font-size: 9px; font-family: "IBM Plex Mono", monospace; }
+  .s1 { stroke: var(--series-1); }
+  .s2 { stroke: var(--series-2); }
+  .s3 { stroke: var(--series-3); }
+  .line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .area { fill: var(--accent-soft); stroke: none; }
+  .bandfill { fill: var(--band); }
+  .meanline { stroke: var(--ink-3); stroke-width: 1; }
+  .retline { stroke: var(--ink-2); stroke-width: 1.4; fill: none; }
+  .cursor { stroke: var(--ink-3); stroke-width: 1; }
+  .up-mark { fill: var(--gain); stroke: var(--surface-2); stroke-width: 1.2; }
+  .down-mark { fill: var(--loss); stroke: var(--surface-2); stroke-width: 1.2; }
+  .end-dot { stroke: var(--surface-2); stroke-width: 2; }
+  .scatter-dot { fill: var(--accent); stroke: var(--surface-2); stroke-width: 1.2; cursor: pointer; }
+  .scatter-dot.muted { fill: var(--ink-3); }
+  .quad-line { stroke: var(--hairline); stroke-width: 1; }
+  .quad-text { fill: var(--ink-3); font-size: 8.5px; }
+
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 20px 14px; }
+  .stat { background: var(--surface-2); border: 1px solid var(--hairline); border-radius: 13px; padding: 10px 12px; }
+  .stat .k { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); font-weight: 650; }
+  .stat .v { font-size: 16px; font-weight: 700; margin-top: 3px; letter-spacing: -0.01em; }
+  .stat .m { font-size: 10.5px; color: var(--ink-3); margin-top: 2px; }
+
+  .disclaimer { padding: 0 20px 20px; font-size: 10.5px; color: var(--ink-3); line-height: 1.55; }
+
+  /* ---------- Tab bar ---------- */
+  .tabbar {
+    flex: none; display: grid; grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--hairline); background: var(--surface-2);
+    padding: 7px 6px calc(6px + env(safe-area-inset-bottom, 0px));
+    position: relative; z-index: 6;
+  }
+  .tab {
+    border: 0; background: none; cursor: pointer; font: inherit; display: grid; justify-items: center; gap: 3px;
+    padding: 4px 2px 3px; color: var(--ink-3); border-radius: 10px;
+  }
+  .tab .lb { font-size: 10px; font-weight: 600; letter-spacing: -0.01em; }
+  .tab[aria-selected="true"] { color: var(--accent); }
+  .tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .homebar { flex: none; height: 20px; display: grid; place-items: center; background: var(--surface-2); }
+  .homebar span { width: 134px; height: 5px; border-radius: 3px; background: var(--ink); opacity: .78; }
+
+  .anim { animation: slidein .26s cubic-bezier(.32,.72,0,1); }
+  @keyframes slidein { from { transform: translateX(14%); opacity: .4; } to { transform: translateX(0); opacity: 1; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .anim { animation: none; }
+    * { transition-duration: .01ms !important; }
+  }
+
+  @media (min-width: 1040px) { .provenance { display: block; } }
+
+  /* Phone: drop the bezel and run the app full-bleed */
+  @media (max-width: 680px) {
+    .stage { padding: 0; align-items: stretch; }
+    .device {
+      width: 100%; height: 100%; max-height: none; border-radius: 0; padding: 0;
+      box-shadow: none; background: var(--surface);
+    }
+    .device::after { display: none; }
+    .screen { border-radius: 0; }
+    .island { display: none; }
+    .statusbar { height: calc(20px + env(safe-area-inset-top, 0px)); padding-top: env(safe-area-inset-top, 0px); }
+    .homebar { display: none; }
+  }
+</style>
+
+<div class="stage">
+  <aside class="provenance">
+    <p class="eyebrow">Statistical analysis</p>
+    <h1>Five days of the top 100, read as risk.</h1>
+    <p>A pocket terminal over the analysis pipeline: hourly prices for the 100 largest cryptocurrencies,
+      turned into returns, moving averages, volatility rankings and Z-score outliers.</p>
+    <dl>
+      <dt>Source</dt><dd>CoinGecko API</dd>
+      <dt>Window</dt><dd id="pv-window">—</dd>
+      <dt>Resolution</dt><dd id="pv-res">—</dd>
+      <dt>Observations</dt><dd id="pv-obs">—</dd>
+    </dl>
+    <p class="note">Every figure is computed from retrieved market data. Trend labels, volatility ranks and
+      outlier flags are descriptive statistics — not financial advice or trading recommendations.</p>
+  </aside>
+
+  <div class="device">
+    <div class="island" aria-hidden="true"></div>
+    <div class="screen">
+      <div class="statusbar">
+        <span class="mono" id="clock">9:41</span>
+        <span class="status-icons" aria-hidden="true">
+          <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+          <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><path d="M8 10.5 6.2 8.6a2.6 2.6 0 0 1 3.6 0L8 10.5Zm-3.6-3.8a5.6 5.6 0 0 1 7.2 0l-1.2 1.3a3.9 3.9 0 0 0-4.8 0L4.4 6.7ZM1.6 3.6a9.5 9.5 0 0 1 12.8 0l-1.2 1.3a7.8 7.8 0 0 0-10.4 0L1.6 3.6Z"/></svg>
+          <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.6" y="0.6" width="20" height="10.8" rx="3" stroke="currentColor" stroke-opacity=".45"/><rect x="2.2" y="2.2" width="14" height="7.6" rx="1.8" fill="currentColor"/><path d="M22.5 4.2v3.6c1-.3 1.6-.9 1.6-1.8s-.6-1.5-1.6-1.8Z" fill="currentColor" fill-opacity=".45"/></svg>
+        </span>
+      </div>
+
+      <div class="app">
+        <!-- ============ MARKETS ============ -->
+        <section class="view" id="view-markets" role="tabpanel" aria-label="Markets">
+          <div class="titlebar">
+            <h2>Markets</h2>
+            <p class="sub" id="mk-sub">Top 100 by market cap</p>
+          </div>
+          <div class="tiles">
+            <div class="tile"><div class="k">Advancers</div><div class="v mono" id="t-adv">—</div><div class="m">of 100 coins</div></div>
+            <div class="tile"><div class="k">Median 5d</div><div class="v mono" id="t-med">—</div><div class="m">across market</div></div>
+            <div class="tile"><div class="k">Outliers</div><div class="v mono" id="t-out">—</div><div class="m">|Z| &gt; 2</div></div>
+          </div>
+          <div class="searchwrap">
+            <label class="search">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="4.6"/><path d="m10.6 10.6 3.2 3.2" stroke-linecap="round"/></svg>
+              <input id="search" type="search" placeholder="Search name or ticker" autocomplete="off" aria-label="Search cryptocurrencies">
+            </label>
+          </div>
+          <div class="chips" role="group" aria-label="Sort by">
+            <button class="chip" id="sort-rank" data-sort="rank" aria-pressed="true">Market cap</button>
+            <button class="chip" data-sort="d5" aria-pressed="false">5-day</button>
+            <button class="chip" data-sort="sd" aria-pressed="false">Volatility</button>
+            <button class="chip" data-sort="oc" aria-pressed="false">Outliers</button>
+          </div>
+          <div class="switchrow">
+            <div>
+              <div class="lab">Hide near-constant assets</div>
+              <div class="hint">Stablecoins and tokenized funds barely move, so they distort every ranking.</div>
+            </div>
+            <button class="switch" id="toggle-lv" role="switch" aria-checked="false" aria-label="Hide near-constant assets"></button>
+          </div>
+          <div class="scroll"><div class="list" id="market-list"></div></div>
+        </section>
+
+        <!-- ============ VOLATILITY ============ -->
+        <section class="view" id="view-volatility" role="tabpanel" aria-label="Volatility" hidden>
+          <div class="titlebar">
+            <h2>Volatility</h2>
+            <p class="sub">Standard deviation of hourly returns, highest first</p>
+          </div>
+          <div class="note">
+            σ is measured on <b>returns, not prices</b> — a dollar spread scales with the price level, so a
+            $75,000 coin and a $0.08 coin can only be compared in percentage terms.
+          </div>
+          <div class="scroll"><div class="list" id="vol-list"></div></div>
+        </section>
+
+        <!-- ============ OUTLIERS ============ -->
+        <section class="view" id="view-outliers" role="tabpanel" aria-label="Outliers" hidden>
+          <div class="titlebar">
+            <h2>Outliers</h2>
+            <p class="sub" id="ol-sub">Hourly returns beyond |Z| &gt; 2</p>
+          </div>
+          <div class="segmented" id="seg-outliers" role="tablist" aria-label="Outlier filter">
+            <button role="tab" aria-selected="true" data-mode="material">Material</button>
+            <button role="tab" aria-selected="false" data-mode="all">All flagged</button>
+          </div>
+          <div class="note" id="ol-note"></div>
+          <div class="scroll"><div class="list" id="outlier-list"></div></div>
+        </section>
+
+        <!-- ============ RISK ============ -->
+        <section class="view" id="view-risk" role="tabpanel" aria-label="Risk vs return" hidden>
+          <div class="titlebar">
+            <h2>Risk vs return</h2>
+            <p class="sub">Mean hourly return against its standard deviation</p>
+          </div>
+          <div class="scroll">
+            <div class="chartcard">
+              <div class="head">
+                <span class="title">All 100 coins</span>
+                <span class="readout" id="risk-readout">Tap a point</span>
+              </div>
+              <svg class="chart" id="risk-chart" viewBox="0 0 320 250" role="img" aria-label="Scatter plot of risk against return"></svg>
+              <div class="legend">
+                <span><i class="swatch dot" style="background:var(--accent)"></i>Cryptocurrency</span>
+                <span><i class="swatch dot" style="background:var(--ink-3)"></i>Near-constant</span>
+              </div>
+            </div>
+            <div class="note">Quadrants split at the cross-sectional medians (σ and mean return), so each
+              quadrant holds a quarter of the market by construction.</div>
+            <div class="list" id="quad-list"></div>
+          </div>
+        </section>
+
+        <!-- ============ DETAIL ============ -->
+        <section class="view detail" id="view-detail" hidden aria-label="Cryptocurrency detail">
+          <div class="navbar">
+            <button class="back" id="btn-back">
+              <svg width="9" height="15" viewBox="0 0 9 15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 1.5 1.5 7.5l6 6"/></svg>
+              <span id="back-label">Markets</span>
+            </button>
+          </div>
+          <div class="scroll" id="detail-body"></div>
+        </section>
+      </div>
+
+      <nav class="tabbar" role="tablist" aria-label="Sections">
+        <button class="tab" role="tab" data-view="markets" aria-selected="true">
+          <svg width="21" height="21" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15.5 8 9.5l4 3.4 6.5-7.6"/><path d="M14.5 5.3h4.2v4.2"/></svg>
+          <span class="lb">Markets</span>
+        </button>
+        <button class="tab" role="tab" data-view="volatility" aria-selected="false">
+          <svg width="21" height="21" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3.5 18V9.5"/><path d="M8.5 18V4.5"/><path d="M13.5 18v-6"/><path d="M18.5 18v-9"/></svg>
+          <span class="lb">Volatility</span>
+        </button>
+        <button class="tab" role="tab" data-view="outliers" aria-selected="false">
+          <svg width="21" height="21" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 13.5h4l3-8 3 12 2.5-6h4.5"/></svg>
+          <span class="lb">Outliers</span>
+        </button>
+        <button class="tab" role="tab" data-view="risk" aria-selected="false">
+          <svg width="21" height="21" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="6.5" cy="14.5" r="2"/><circle cx="12" cy="8.5" r="2"/><circle cx="17" cy="13" r="2"/><path d="M2.5 19.5h17"/></svg>
+          <span class="lb">Risk</span>
+        </button>
+      </nav>
+      <div class="homebar"><span></span></div>
+    </div>
+  </div>
+</div>
+
+<script src="analysis_data.js"></script>
+<script>
+(function () {
+  "use strict";
+  const DATA = window.CRYPTO_DATA;
+  const $ = (sel) => document.querySelector(sel);
+
+  if (!DATA || !DATA.coins) {
+    $("#market-list").innerHTML =
+      '<p class="empty">The analysis data could not be loaded.<br>Run <b>python main.py</b> and republish.</p>';
+    return;
+  }
+
+  const meta = DATA.meta;
+  const coins = DATA.coins;
+  const byId = new Map(coins.map((c) => [c.id, c]));
+  const windowStartMs = Date.parse(meta.windowStart.replace(" ", "T") + ":00Z");
+
+  /* ---------- formatting ---------- */
+  const fmtPrice = (v) => {
+    if (v == null) return "—";
+    const a = Math.abs(v);
+    if (a >= 1000) return "$" + v.toLocaleString("en-US", { maximumFractionDigits: 0 });
+    if (a >= 1) return "$" + v.toFixed(2);
+    return "$" + v.toPrecision(4).replace(/0+$/, "").replace(/\.$/, "");
+  };
+  const fmtCap = (v) => {
+    if (v == null) return "—";
+    const a = Math.abs(v);
+    if (a >= 1e12) return "$" + (v / 1e12).toFixed(2) + "T";
+    if (a >= 1e9) return "$" + (v / 1e9).toFixed(2) + "B";
+    if (a >= 1e6) return "$" + (v / 1e6).toFixed(1) + "M";
+    return "$" + v.toFixed(0);
+  };
+  const fmtPct = (v, d = 2) => (v == null ? "—" : (v >= 0 ? "+" : "") + v.toFixed(d) + "%");
+  const fmtSigma = (v) => (v == null ? "—" : v >= 0.01 ? v.toFixed(3) + "%" : v.toFixed(4) + "%");
+  const stamp = (mins) => {
+    const d = new Date(windowStartMs + mins * 60000);
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" }) + " " +
+      String(d.getUTCHours()).padStart(2, "0") + ":" + String(d.getUTCMinutes()).padStart(2, "0");
+  };
+  const dirClass = (v) => (v > 0 ? "up" : v < 0 ? "down" : "flat");
+
+  /* ---------- status bar clock (the device's clock, not the data) ---------- */
+  const clock = $("#clock");
+  const tick = () => {
+    const n = new Date();
+    let h = n.getHours() % 12; if (h === 0) h = 12;
+    clock.textContent = h + ":" + String(n.getMinutes()).padStart(2, "0");
+  };
+  tick(); setInterval(tick, 20000);
+
+  /* ---------- provenance panel + summary tiles ---------- */
+  $("#pv-window").textContent = meta.windowStart + " → " + meta.windowEnd + " UTC";
+  $("#pv-res").textContent = meta.intervalMinutes + "-minute observations";
+  $("#pv-obs").textContent = meta.observations.toLocaleString("en-US") + " price points";
+  $("#mk-sub").textContent = "Top " + meta.coins + " · " + meta.windowStart.slice(5) + " → " + meta.windowEnd.slice(5) + " UTC";
+  $("#t-adv").textContent = meta.advancers;
+  const med = $("#t-med");
+  med.textContent = fmtPct(meta.medianReturn);
+  med.style.color = meta.medianReturn >= 0 ? "var(--gain)" : "var(--loss)";
+  $("#t-out").textContent = meta.totalOutliers.toLocaleString("en-US");
+  $("#ol-sub").textContent = meta.totalOutliers + " flagged · " + meta.extremeOutliers + " extreme (|Z| > 3)";
+
+  /* ---------- sparkline ---------- */
+  function sparkline(coin) {
+    const pts = coin.pr.filter((v) => v != null);
+    const step = Math.max(1, Math.floor(pts.length / 32));
+    const s = pts.filter((_, i) => i % step === 0);
+    if (s.length < 2) return "";
+    const min = Math.min(...s), max = Math.max(...s);
+    // Floor the range at ±0.5% of the price level: without this a stablecoin's
+    // 0.03% wobble auto-scales into a dramatic-looking line.
+    const floor = Math.abs((min + max) / 2) * 0.01;
+    const span = Math.max(max - min, floor) || 1;
+    const w = 62, h = 26, pad = 3;
+    const mid = (min + max) / 2;
+    const d = s.map((v, i) => {
+      const x = (i / (s.length - 1)) * w;
+      const y = h - pad - ((v - (mid - span / 2)) / span) * (h - pad * 2);
+      return (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1);
+    }).join(" ");
+    const color = coin.d5 >= 0 ? "var(--gain)" : "var(--loss)";
+    return '<svg class="spark" viewBox="0 0 ' + w + " " + h + '" aria-hidden="true">' +
+      '<path d="' + d + '" fill="none" stroke="' + color + '" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>';
+  }
+
+  /* ---------- markets list ---------- */
+  const state = { sort: "rank", query: "", hideLV: false, tab: "markets", outlierMode: "material", detail: null };
+
+  function visibleCoins() {
+    let list = coins.slice();
+    if (state.hideLV) list = list.filter((c) => !c.lv);
+    const q = state.query.trim().toLowerCase();
+    if (q) list = list.filter((c) => c.n.toLowerCase().includes(q) || c.s.toLowerCase().includes(q));
+    const key = state.sort;
+    list.sort((a, b) => (key === "rank" ? a.r - b.r : (b[key] ?? -Infinity) - (a[key] ?? -Infinity)));
+    return list;
+  }
+
+  function renderMarkets() {
+    const list = visibleCoins();
+    const box = $("#market-list");
+    if (!list.length) {
+      box.innerHTML = '<p class="empty">No cryptocurrency matches “' + state.query + '”.</p>';
+      return;
+    }
+    box.innerHTML = list.map((c) => {
+      const tag = c.lv ? '<span class="tag">near-constant</span>'
+        : c.hv ? '<span class="tag warn">high σ</span>' : "";
+      return '<button class="row" data-coin="' + c.id + '">' +
+        '<span class="rank mono">' + c.r + "</span>" +
+        '<span><span class="name">' + c.n + '</span>' +
+        '<span class="tick"><span class="mono">' + c.s + "</span>" + tag + "</span></span>" +
+        sparkline(c) +
+        '<span><span class="price mono">' + fmtPrice(c.lp ?? c.p) + "</span><br>" +
+        '<span class="pill ' + dirClass(c.d5) + '">' + fmtPct(c.d5) + "</span></span>" +
+        "</button>";
+    }).join("");
+  }
+
+  /* ---------- volatility list ---------- */
+  function renderVolatility() {
+    const list = coins.slice().sort((a, b) => b.sd - a.sd);
+    const max = list[0].sd || 1;
+    $("#vol-list").innerHTML = list.map((c, i) => {
+      const pctw = Math.max(1.5, (c.sd / max) * 100);
+      return '<button class="vrow" data-coin="' + c.id + '">' +
+        '<span class="n mono">' + (i + 1) + "</span>" +
+        "<span>" +
+        '<span class="lab">' + c.n + ' <span class="mono" style="color:var(--ink-3);font-size:11px">' + c.s + "</span>" +
+        (c.hv ? ' <span class="tag warn">unusual</span>' : "") + "</span>" +
+        '<span class="bartrack"><span class="bar' + (i < 10 ? " hot" : "") + '" style="width:' + pctw + '%"></span></span>' +
+        "</span>" +
+        '<span class="val mono">' + fmtSigma(c.sd) + "</span>" +
+        "</button>";
+    }).join("");
+  }
+
+  /* ---------- outliers list ---------- */
+  function renderOutliers() {
+    const material = state.outlierMode === "material";
+    const rows = DATA.outliers.filter((o) => (material ? !o.lv : true));
+    $("#ol-note").innerHTML = material
+      ? "Showing the <b>" + meta.materialOutliers + " material outliers</b>. " +
+        (meta.totalOutliers - meta.materialOutliers) + " flagged moves belong to near-constant assets — for a coin whose σ is " +
+        "0.003%, a 0.03% blip is a 10σ event: statistically extreme, economically nothing."
+      : "All <b>" + meta.totalOutliers + " flagged moves</b>, including near-constant assets. Notice that the " +
+        "largest Z-scores belong to assets that barely moved in price.";
+    $("#outlier-list").innerHTML = rows.slice(0, 160).map((o) => {
+      const coin = coins.find((c) => c.s === o.s);
+      return '<button class="orow"' + (coin ? ' data-coin="' + coin.id + '"' : "") + ">" +
+        '<span class="dir ' + o.t + '">' + (o.t === "pos" ? "▲" : "▼") + "</span>" +
+        '<span><span class="who">' + o.n + (o.lv ? ' <span class="tag">near-constant</span>' : "") + "</span>" +
+        '<span class="when mono">' + o.d + " UTC</span></span>" +
+        '<span><span class="num mono" style="color:' + (o.t === "pos" ? "var(--gain)" : "var(--loss)") + '">' +
+        fmtPct(o.rt) + "</span>" +
+        '<span class="z mono">Z ' + o.z.toFixed(2) + (o.x ? " · extreme" : "") + "</span></span>" +
+        "</button>";
+    }).join("");
+  }
+
+  /* ---------- risk scatter ---------- */
+  function renderRisk() {
+    const W = 320, H = 250, L = 38, R = 10, T = 12, B = 30;
+    const pts = coins.filter((c) => c.sd != null && c.mean != null);
+    const xs = pts.map((p) => p.sd), ys = pts.map((p) => p.mean);
+    const xMax = Math.max(...xs) * 1.06, yMin = Math.min(...ys), yMax = Math.max(...ys);
+    const yPad = (yMax - yMin) * 0.12 || 0.01;
+    const lo = yMin - yPad, hi = yMax + yPad;
+    const sx = (v) => L + (v / xMax) * (W - L - R);
+    const sy = (v) => H - B - ((v - lo) / (hi - lo)) * (H - T - B);
+    const medX = meta.medianSd, medY = [...ys].sort((a, b) => a - b)[Math.floor(ys.length / 2)];
+
+    let svg = "";
+    for (let i = 0; i <= 3; i++) {
+      const v = lo + ((hi - lo) * i) / 3, y = sy(v);
+      svg += '<line class="grid-line" x1="' + L + '" y1="' + y.toFixed(1) + '" x2="' + (W - R) + '" y2="' + y.toFixed(1) + '"/>' +
+        '<text class="axis-text" x="' + (L - 5) + '" y="' + (y + 3).toFixed(1) + '" text-anchor="end">' + v.toFixed(2) + "</text>";
+    }
+    for (let i = 0; i <= 3; i++) {
+      const v = (xMax * i) / 3, x = sx(v);
+      svg += '<text class="axis-text" x="' + x.toFixed(1) + '" y="' + (H - B + 12) + '" text-anchor="middle">' + v.toFixed(1) + "</text>";
+    }
+    svg += '<line class="quad-line" x1="' + sx(medX) + '" y1="' + T + '" x2="' + sx(medX) + '" y2="' + (H - B) + '"/>';
+    svg += '<line class="quad-line" x1="' + L + '" y1="' + sy(medY) + '" x2="' + (W - R) + '" y2="' + sy(medY) + '"/>';
+    svg += '<text class="quad-text" x="' + (W - R - 2) + '" y="' + (T + 9) + '" text-anchor="end">high return · high σ</text>';
+    svg += '<text class="quad-text" x="' + (L + 2) + '" y="' + (H - B - 4) + '">low return · low σ</text>';
+    pts.forEach((p) => {
+      svg += '<circle class="scatter-dot' + (p.lv ? " muted" : "") + '" data-coin="' + p.id + '" cx="' +
+        sx(p.sd).toFixed(1) + '" cy="' + sy(p.mean).toFixed(1) + '" r="4"><title>' + p.n +
+        " · σ " + fmtSigma(p.sd) + " · mean " + fmtPct(p.mean, 3) + "</title></circle>";
+    });
+    svg += '<text class="axis-text" x="' + (W / 2) + '" y="' + (H - 4) + '" text-anchor="middle">σ of hourly returns (%)</text>';
+    svg += '<text class="axis-text" x="10" y="' + (T + 6) + '">mean %</text>';
+    $("#risk-chart").innerHTML = svg;
+
+    const counts = {};
+    coins.forEach((c) => { counts[c.q] = (counts[c.q] || 0) + 1; });
+    $("#quad-list").innerHTML = Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .map(([q, n]) => '<div class="row" style="cursor:default;grid-template-columns:1fr auto">' +
+        '<span class="name" style="font-size:13px">' + q + "</span>" +
+        '<span class="pill flat mono" style="min-width:44px">' + n + "</span></div>").join("");
+  }
+
+  /* ---------- detail charts ---------- */
+  function priceChart(c) {
+    const W = 296, H = 150, L = 40, R = 8, T = 10, B = 20;
+    const idx = c.pr.map((v, i) => (v == null ? -1 : i)).filter((i) => i >= 0);
+    const all = idx.flatMap((i) => [c.pr[i], c.m3[i], c.m5[i]].filter((v) => v != null));
+    const min = Math.min(...all), max = Math.max(...all), span = max - min || Math.abs(max) * 0.01 || 1;
+    const lo = min - span * 0.08, hi = max + span * 0.08;
+    const n = c.pr.length;
+    const sx = (i) => L + (i / (n - 1)) * (W - L - R);
+    const sy = (v) => H - B - ((v - lo) / (hi - lo)) * (H - T - B);
+    const path = (arr) => {
+      let d = "", started = false;
+      arr.forEach((v, i) => {
+        if (v == null) { started = false; return; }
+        d += (started ? "L" : "M") + sx(i).toFixed(1) + " " + sy(v).toFixed(1) + " ";
+        started = true;
+      });
+      return d.trim();
+    };
+    let svg = "";
+    for (let i = 0; i <= 3; i++) {
+      const v = lo + ((hi - lo) * i) / 3, y = sy(v);
+      svg += '<line class="grid-line" x1="' + L + '" y1="' + y.toFixed(1) + '" x2="' + (W - R) + '" y2="' + y.toFixed(1) + '"/>' +
+        '<text class="axis-text" x="' + (L - 4) + '" y="' + (y + 3).toFixed(1) + '" text-anchor="end">' + fmtPrice(v) + "</text>";
+    }
+    const areaD = path(c.pr) + " L" + sx(n - 1).toFixed(1) + " " + (H - B) + " L" + sx(0).toFixed(1) + " " + (H - B) + " Z";
+    svg += '<path class="area" d="' + areaD + '"/>';
+    svg += '<path class="line s3" d="' + path(c.m5) + '"/>';
+    svg += '<path class="line s2" d="' + path(c.m3) + '"/>';
+    svg += '<path class="line s1" d="' + path(c.pr) + '"/>';
+    const last = n - 1;
+    svg += '<circle class="end-dot" cx="' + sx(last).toFixed(1) + '" cy="' + sy(c.pr[last]).toFixed(1) +
+      '" r="4" fill="var(--series-1)"/>';
+    [0, Math.floor(n / 2), n - 1].forEach((i) => {
+      svg += '<text class="axis-text" x="' + sx(i).toFixed(1) + '" y="' + (H - 5) + '" text-anchor="' +
+        (i === 0 ? "start" : i === n - 1 ? "end" : "middle") + '">' + stamp(c.ts[i]).split(" ")[0] + " " + stamp(c.ts[i]).split(" ")[1] + "</text>";
+    });
+    return { svg: svg, W: W, H: H, sx: sx, sy: sy, n: n };
+  }
+
+  function returnsChart(c) {
+    const W = 296, H = 140, L = 40, R = 8, T = 10, B = 20;
+    const vals = c.rt.filter((v) => v != null);
+    if (!vals.length) return null;
+    const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
+    const sd = c.sd;
+    const min = Math.min(...vals), max = Math.max(...vals), span = (max - min) || 0.1;
+    const lo = min - span * 0.16, hi = max + span * 0.16;
+    const n = c.rt.length;
+    const sx = (i) => L + (i / (n - 1)) * (W - L - R);
+    const sy = (v) => H - B - ((v - lo) / (hi - lo)) * (H - T - B);
+    let svg = "";
+    const bandTop = sy(mean + 2 * sd), bandBot = sy(mean - 2 * sd);
+    svg += '<rect class="bandfill" x="' + L + '" y="' + Math.min(bandTop, bandBot).toFixed(1) +
+      '" width="' + (W - L - R) + '" height="' + Math.abs(bandBot - bandTop).toFixed(1) + '"/>';
+    for (let i = 0; i <= 2; i++) {
+      const v = lo + ((hi - lo) * i) / 2, y = sy(v);
+      svg += '<line class="grid-line" x1="' + L + '" y1="' + y.toFixed(1) + '" x2="' + (W - R) + '" y2="' + y.toFixed(1) + '"/>' +
+        '<text class="axis-text" x="' + (L - 4) + '" y="' + (y + 3).toFixed(1) + '" text-anchor="end">' + v.toFixed(1) + "%</text>";
+    }
+    svg += '<line class="meanline" x1="' + L + '" y1="' + sy(mean).toFixed(1) + '" x2="' + (W - R) + '" y2="' + sy(mean).toFixed(1) + '"/>';
+    let d = "", started = false;
+    c.rt.forEach((v, i) => {
+      if (v == null) { started = false; return; }
+      d += (started ? "L" : "M") + sx(i).toFixed(1) + " " + sy(v).toFixed(1) + " ";
+      started = true;
+    });
+    svg += '<path class="retline" d="' + d.trim() + '"/>';
+    const extreme = new Set(c.oe);
+    c.oi.forEach((i) => {
+      const v = c.rt[i]; if (v == null) return;
+      const x = sx(i), y = sy(v), s = extreme.has(i) ? 5.4 : 4;
+      svg += v >= 0
+        ? '<path class="up-mark" d="M' + x.toFixed(1) + " " + (y - s).toFixed(1) + "L" + (x + s).toFixed(1) + " " + (y + s * 0.8).toFixed(1) + "L" + (x - s).toFixed(1) + " " + (y + s * 0.8).toFixed(1) + 'Z"/>'
+        : '<path class="down-mark" d="M' + x.toFixed(1) + " " + (y + s).toFixed(1) + "L" + (x + s).toFixed(1) + " " + (y - s * 0.8).toFixed(1) + "L" + (x - s).toFixed(1) + " " + (y - s * 0.8).toFixed(1) + 'Z"/>';
+    });
+    return { svg: svg, W: W, H: H, sx: sx, sy: sy, n: n, mean: mean };
+  }
+
+  /* ---------- detail view ---------- */
+  let backTo = "markets";
+  function openDetail(id, from) {
+    const c = byId.get(id);
+    if (!c) return;
+    backTo = from || state.tab;
+    state.detail = id;
+    $("#back-label").textContent = { markets: "Markets", volatility: "Volatility", outliers: "Outliers", risk: "Risk" }[backTo];
+
+    const price = priceChart(c);
+    const rets = returnsChart(c);
+    const trendClass = c.t === "Bullish" ? "bull" : c.t === "Bearish" ? "bear" : "";
+    const rel = c.t === "Bullish" ? "Price > MA(3) > MA(5)" : c.t === "Bearish" ? "Price < MA(3) < MA(5)" : "mixed ordering";
+    const flags = [];
+    if (c.hv) flags.push('<span class="tag warn">unusually high σ</span>');
+    if (c.lv) flags.push('<span class="tag">near-constant asset</span>');
+    if (c.an) flags.push('<span class="tag warn">multivariate anomaly</span>');
+
+    $("#detail-body").innerHTML =
+      '<div class="hero">' +
+        '<div class="who"><span class="badge">' + c.s.slice(0, 4) + "</span>" +
+        "<span><h3>" + c.n + '</h3><div class="rank">Rank ' + c.r + " by market cap · " + fmtCap(c.mc) + "</div></span></div>" +
+        '<div class="figure">' + fmtPrice(c.lp ?? c.p) + "</div>" +
+        (c.lp != null ? '<div class="rank" style="margin:-2px 0 8px">Live snapshot · last hourly bar ' + fmtPrice(c.p) + "</div>" : "") +
+        '<div class="row2"><span class="pill ' + dirClass(c.d5) + '">' + fmtPct(c.d5) + " · 5 days</span>" +
+        '<span class="trend ' + trendClass + '">' + c.t + "</span>" +
+        '<span style="font-size:11px;color:var(--ink-3)">' + rel + "</span></div>" +
+      "</div>" +
+      (flags.length ? '<div class="flags">' + flags.join("") + "</div>" : "") +
+
+      '<div class="chartcard">' +
+        '<div class="head"><span class="title">Price · MA(3) · MA(5)</span>' +
+        '<span class="readout" id="price-readout">Drag to inspect</span></div>' +
+        '<svg class="chart" id="price-chart" viewBox="0 0 ' + price.W + " " + price.H + '" role="img" aria-label="Price with moving averages">' + price.svg + "</svg>" +
+        '<div class="legend">' +
+          '<span><i class="swatch" style="background:var(--series-1)"></i>Price</span>' +
+          '<span><i class="swatch" style="background:var(--series-2)"></i>MA(3)</span>' +
+          '<span><i class="swatch" style="background:var(--series-3)"></i>MA(5)</span>' +
+        "</div>" +
+      "</div>" +
+
+      (rets ? '<div class="chartcard">' +
+        '<div class="head"><span class="title">Hourly returns &amp; outliers</span>' +
+        '<span class="readout">' + c.oc + " flagged · " + c.ec + " extreme</span></div>" +
+        '<svg class="chart" id="ret-chart" viewBox="0 0 ' + rets.W + " " + rets.H + '" role="img" aria-label="Returns with outliers">' + rets.svg + "</svg>" +
+        '<div class="legend">' +
+          '<span><i class="swatch" style="background:var(--ink-2)"></i>Return</span>' +
+          '<span><i class="swatch" style="background:var(--band);height:9px;border-radius:2px"></i>Mean ± 2σ</span>' +
+          '<span><i class="swatch dot" style="background:var(--gain)"></i>Positive</span>' +
+          '<span><i class="swatch dot" style="background:var(--loss)"></i>Negative</span>' +
+        "</div></div>" : "") +
+
+      '<div class="stats">' +
+        stat("Std deviation", fmtSigma(c.sd), "volatility rank " + c.vr + " of " + meta.coins) +
+        stat("Annualised vol", c.av != null ? c.av.toFixed(0) + "%" : "—", "24/7 scaling") +
+        stat("Mean return", fmtPct(c.mean, 3), "per hour") +
+        stat("Max drawdown", fmtPct(c.dd, 2), "peak to trough") +
+        stat("MA(3)", fmtPrice(c.ma3), "3-hour average") +
+        stat("MA(5)", fmtPrice(c.ma5), "5-hour average") +
+        stat("Outliers", String(c.oc), c.po + " up · " + c.no + " down") +
+        stat("24h volume", fmtCap(c.v), "reported") +
+      "</div>" +
+      '<div class="note" style="margin-bottom:14px"><b>' + c.q + ".</b> Quadrant assigned against the market medians.</div>" +
+      '<p class="disclaimer">Descriptive statistics computed from ' + meta.observations.toLocaleString("en-US") +
+      " observations retrieved from the CoinGecko API. Trend labels and outlier flags describe past data; " +
+      "they are not financial advice or trading recommendations.</p>";
+
+    attachScrub(c, price);
+    showView("detail");
+  }
+
+  const stat = (k, v, m) => '<div class="stat"><div class="k">' + k + '</div><div class="v mono">' + v + '</div><div class="m">' + m + "</div></div>";
+
+  /* ---------- chart scrubbing ---------- */
+  function attachScrub(c, price) {
+    const svg = $("#price-chart");
+    const readout = $("#price-readout");
+    if (!svg) return;
+    const ns = "http://www.w3.org/2000/svg";
+    const line = document.createElementNS(ns, "line");
+    line.setAttribute("class", "cursor");
+    line.setAttribute("y1", 10); line.setAttribute("y2", price.H - 20);
+    const dot = document.createElementNS(ns, "circle");
+    dot.setAttribute("r", 4.5); dot.setAttribute("fill", "var(--series-1)");
+    dot.setAttribute("stroke", "var(--surface-2)"); dot.setAttribute("stroke-width", 2);
+    line.setAttribute("opacity", 0); dot.setAttribute("opacity", 0);
+    svg.append(line, dot);
+
+    const move = (evt) => {
+      const box = svg.getBoundingClientRect();
+      const x = ((evt.clientX - box.left) / box.width) * price.W;
+      let i = Math.round(((x - 40) / (price.W - 48)) * (price.n - 1));
+      i = Math.max(0, Math.min(price.n - 1, i));
+      if (c.pr[i] == null) return;
+      const px = price.sx(i), py = price.sy(c.pr[i]);
+      line.setAttribute("x1", px); line.setAttribute("x2", px); line.setAttribute("opacity", 1);
+      dot.setAttribute("cx", px); dot.setAttribute("cy", py); dot.setAttribute("opacity", 1);
+      readout.innerHTML = "<b>" + fmtPrice(c.pr[i]) + "</b> · " + stamp(c.ts[i]) + " UTC";
+    };
+    const clear = () => {
+      line.setAttribute("opacity", 0); dot.setAttribute("opacity", 0);
+      readout.textContent = "Drag to inspect";
+    };
+    svg.addEventListener("pointermove", move);
+    svg.addEventListener("pointerdown", move);
+    svg.addEventListener("pointerleave", clear);
+  }
+
+  /* ---------- navigation ---------- */
+  const views = {
+    markets: $("#view-markets"), volatility: $("#view-volatility"),
+    outliers: $("#view-outliers"), risk: $("#view-risk"), detail: $("#view-detail"),
+  };
+  function showView(name) {
+    Object.entries(views).forEach(([k, el]) => { el.hidden = k !== name; });
+    views[name].classList.remove("anim");
+    void views[name].offsetWidth;
+    views[name].classList.add("anim");
+    document.querySelectorAll(".tab").forEach((t) => {
+      t.setAttribute("aria-selected", String(t.dataset.view === (name === "detail" ? backTo : name)));
+    });
+    if (name !== "detail") { state.tab = name; state.detail = null; }
+  }
+
+  document.querySelectorAll(".tab").forEach((tab) => {
+    tab.addEventListener("click", () => showView(tab.dataset.view));
+  });
+  $("#btn-back").addEventListener("click", () => showView(backTo));
+
+  document.addEventListener("click", (e) => {
+    const el = e.target.closest("[data-coin]");
+    if (el) openDetail(el.dataset.coin, state.tab);
+  });
+
+  /* ---------- controls ---------- */
+  $("#search").addEventListener("input", (e) => { state.query = e.target.value; renderMarkets(); });
+  document.querySelectorAll(".chips .chip").forEach((chip) => {
+    chip.addEventListener("click", () => {
+      document.querySelectorAll(".chips .chip").forEach((c) => c.setAttribute("aria-pressed", "false"));
+      chip.setAttribute("aria-pressed", "true");
+      state.sort = chip.dataset.sort;
+      renderMarkets();
+    });
+  });
+  const lvToggle = $("#toggle-lv");
+  lvToggle.addEventListener("click", () => {
+    state.hideLV = lvToggle.getAttribute("aria-checked") !== "true";
+    lvToggle.setAttribute("aria-checked", String(state.hideLV));
+    renderMarkets();
+  });
+  document.querySelectorAll("#seg-outliers button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("#seg-outliers button").forEach((b) => b.setAttribute("aria-selected", "false"));
+      btn.setAttribute("aria-selected", "true");
+      state.outlierMode = btn.dataset.mode;
+      renderOutliers();
+    });
+  });
+  $("#risk-chart").addEventListener("pointermove", (e) => {
+    const dot = e.target.closest(".scatter-dot");
+    if (!dot) return;
+    const c = byId.get(dot.dataset.coin);
+    if (c) $("#risk-readout").innerHTML = "<b>" + c.s + "</b> σ " + fmtSigma(c.sd) + " · " + fmtPct(c.mean, 3);
+  });
+
+  /* ---------- state survives the live server's auto-reload ---------- */
+  const STATE_KEY = "volatility-deck-state";
+  let restoredDetail = null;
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(STATE_KEY) || "null");
+    if (saved) {
+      ["sort", "query", "tab", "outlierMode"].forEach((k) => { if (typeof saved[k] === "string") state[k] = saved[k]; });
+      state.hideLV = !!saved.hideLV;
+      if (saved.detail && byId.has(saved.detail)) restoredDetail = saved.detail;
+      sessionStorage.removeItem(STATE_KEY);
+    }
+  } catch (e) { /* storage unavailable: start from defaults */ }
+  window.__captureState = () => {
+    try { sessionStorage.setItem(STATE_KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
+  };
+  $("#search").value = state.query;
+  lvToggle.setAttribute("aria-checked", String(state.hideLV));
+  document.querySelectorAll(".chips .chip").forEach((c) => c.setAttribute("aria-pressed", String(c.dataset.sort === state.sort)));
+  document.querySelectorAll("#seg-outliers button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.mode === state.outlierMode)));
+
+  /* ---------- boot ---------- */
+  renderMarkets();
+  renderVolatility();
+  renderOutliers();
+  renderRisk();
+  if (state.tab !== "markets" && views[state.tab]) showView(state.tab);
+  if (restoredDetail) openDetail(restoredDetail, state.tab);
+})();
+</script>
