@@ -11,3 +11,4 @@ jupyter>=1.0         # optional notebook
 nbformat>=5.9
 pytest>=7.4          # tests
 ruff>=0.5            # linting (ruff check .)
+fastapi
